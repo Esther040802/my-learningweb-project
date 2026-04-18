@@ -756,51 +756,7 @@
     }
 
 
-    // ========== 修改2：sendToGoogleSheets 函数 - 修复了 URL 判断逻辑 ==========
-    async function sendToGoogleSheets(data) {
-        // 检查 URL 是否已定义
-        if (typeof GOOGLE_SCRIPT_URL === 'undefined' || !GOOGLE_SCRIPT_URL) {
-            console.warn('GOOGLE_SCRIPT_URL is not defined');
-            return false;
-        }
-        // 检查是否是默认的占位符（注意：这里判断的是字符串 'YOUR_GOOGLE_SCRIPT_URL_HERE'，不是您的真实 URL）
-        if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
-            console.warn('Please replace GOOGLE_SCRIPT_URL with your actual Google Apps Script URL');
-            return false;
-        }
-        try {
-            await fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            return true;
-        } catch (error) {
-            console.error('Error sending to Google Sheets:', error);
-            return false;
-        }
-    }
-
-    // IndexedDB 初始化（未修改）
-    let db = null;
-    function initDB() {
-        return new Promise((resolve, reject) => {
-            const req = indexedDB.open("KolbWorkshopDB", 2);
-            req.onerror = () => reject("DB error");
-            req.onsuccess = (e) => { db = e.target.result; resolve(db); };
-            req.onupgradeneeded = (e) => {
-                const dbRef = e.target.result;
-                if (!dbRef.objectStoreNames.contains("workshopRegistrations")) {
-                    dbRef.createObjectStore("workshopRegistrations", { keyPath: "id", autoIncrement: true });
-                }
-            };
-        });
-    }
-
-    // ========== 修改3：saveRegistration 函数 - 新增 workshopInterest 参数 ==========
-    // 原函数只有8个参数，现在增加到9个参数，新增 workshopInterest 字段
-    async function saveRegistration(name, phone, email, freeTime, scores, primaryCode, secondaryCode, fullAnalysisHtml, workshopInterest = false) {
+    async function saveRegistration(name, phone, email, freeTime, scores, primaryCode, secondaryCode, fullAnalysisHtml) {
         if (!db) await initDB();
         const tx = db.transaction(["workshopRegistrations"], "readwrite");
         const store = tx.objectStore("workshopRegistrations");
@@ -812,8 +768,8 @@
             ce: scores.ce, ro: scores.ro, ac: scores.ac, ae: scores.ae,
             primaryStyle: primaryCode,
             secondaryStyle: secondaryCode,
-            insightSummary: fullAnalysisHtml.substring(0, 500),
-            workshopInterest: workshopInterest,  // 新增字段：标记用户是否对工作坊感兴趣
+            insightSummary: fullAnalysisHtml.substring(0, 800),
+            workshopInterest: true,
             timestamp: new Date().toISOString()
         };
         return new Promise((resolve, reject) => {
@@ -823,117 +779,127 @@
         });
     }
 
-    // ========== 修改4：新增 saveToCloud 函数 - 统一发送数据到 Google Sheets ==========
-    async function saveToCloud(name, phone, email, freeTime, scores, primaryStyleName, secondaryStyleName, workshopStatus) {
-        const sheetData = {
-            name: name,
-            phone: phone,
-            email: email,
-            freeTime: freeTime,
-            scores: { ce: scores.ce, ro: scores.ro, ac: scores.ac, ae: scores.ae },
-            primaryStyle: primaryStyleName,
-            secondaryStyle: secondaryStyleName,
-            workshopInterest: workshopStatus
-        };
-        return await sendToGoogleSheets(sheetData);
-    }
 
-    // ========== 修改5：calculateAndShow 函数 - 核心修改 ==========
-    // 现在点击 Calculate 按钮时会自动保存数据到 Google Sheets
+    async function sendToGoogleSheets(data) {
+    // 检查 GOOGLE_SCRIPT_URL 是否已定义
+    if (typeof GOOGLE_SCRIPT_URL === 'undefined' || !GOOGLE_SCRIPT_URL) {
+        console.warn('GOOGLE_SCRIPT_URL is not defined');
+        return false;
+    }
+    
+    // 检查是否是默认的占位符（注意：不要判断具体的真实 URL）
+    if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
+        console.warn('Please replace GOOGLE_SCRIPT_URL with your actual Google Apps Script URL');
+        return false;
+    }
+    
+    console.log('Sending data to:', GOOGLE_SCRIPT_URL);
+    
+    try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        console.log('Data sent to Google Sheets successfully');
+        return true;
+    } catch (error) {
+        console.error('Error sending to Google Sheets:', error);
+        return false;
+    }
+}
+    
     async function calculateAndShow() {
         const name = document.getElementById('fullName').value.trim();
         const phone = document.getElementById('phone').value.trim();
         if (!name) { alert("Please enter your name."); return; }
-        if (!phone) { alert("Phone number is required."); return; }
-        if (!allRowsValid()) { alert("Each row must contain 4,3,2,1 exactly once."); return; }
-
+        if (!phone) { alert("Phone number is required for workshop updates."); return; }
+        if (!allRowsValid()) { alert("Each row must contain 4,3,2,1 exactly once. Fix red-bordered cells."); return; }
+        
         const matrix = getMatrix();
         const scores = computeScores(matrix);
         const topTwo = getTopTwoStyles(scores);
-        const primary = topTwo[0], secondary = topTwo[1];
+        const primary = topTwo[0];
+        const secondary = topTwo[1];
+        
         const fullAnalysisHtml = generateFullAnalysis(primary, secondary);
-
-        // 显示计算结果
+        
         document.getElementById('ceScore').innerText = scores.ce;
         document.getElementById('roScore').innerText = scores.ro;
         document.getElementById('acScore').innerText = scores.ac;
         document.getElementById('aeScore').innerText = scores.ae;
         document.getElementById('styleMessage').innerHTML = `🧠 Your dominant styles: ${primary.fullData.fullName} (${primary.code}) + ${secondary.fullData.fullName} (${secondary.code})`;
-        document.getElementById('insightPanel').style.display = "block";
-        document.getElementById('insightPanel').innerHTML = `<div class="insight-title">📖 Complete Personalized Learning Analysis</div>${fullAnalysisHtml}`;
-        document.getElementById('workshopSection').style.display = "block";
-
-        const emailVal = document.getElementById('email').value.trim();
         
-        // 显示保存状态
-        const saveStatusDiv = document.getElementById('saveStatus');
-        saveStatusDiv.style.display = "block";
-        saveStatusDiv.innerHTML = "⏳ Saving your data...";
-        saveStatusDiv.style.background = "#eef3fa";
+        const insightDiv = document.getElementById('insightPanel');
+        insightDiv.style.display = "block";
+        insightDiv.innerHTML = `<div class="insight-title">📖 Complete Personalized Learning Analysis</div>${fullAnalysisHtml}`;
         
-        try {
-            // 修改5a：保存到本地 IndexedDB（workshopInterest = false，表示尚未注册工作坊）
-            await saveRegistration(name, phone, emailVal, "Not specified yet", scores, primary.code, secondary.code, fullAnalysisHtml, false);
-            
-            // 修改5b：发送到 Google Sheets（工作坊兴趣字段显示"Interested? Please register below"）
-            const primaryStyleName = `${primary.fullData.fullName} (${primary.code})`;
-            const secondaryStyleName = `${secondary.fullData.fullName} (${secondary.code})`;
-            const cloudSaved = await saveToCloud(name, phone, emailVal, "Not specified", scores, primaryStyleName, secondaryStyleName, "Interested? Please register below");
-            
-            if (cloudSaved) {
-                saveStatusDiv.innerHTML = "✅ Your test results have been saved to Google Sheets! You can now register for the workshop below.";
-                saveStatusDiv.style.background = "#e0f2e9";
-            } else {
-                saveStatusDiv.innerHTML = "✅ Test results saved locally. (Google Sheets connection issue, but we have your data.)";
-                saveStatusDiv.style.background = "#fff3cd";
-            }
-        } catch(e) {
-            console.error(e);
-            saveStatusDiv.innerHTML = "⚠️ Data saved locally only. Please check your connection.";
-            saveStatusDiv.style.background = "#ffe6e5";
-        }
+        const workshopDiv = document.getElementById('workshopSection');
+        workshopDiv.style.display = "block";
         
-        // 修改5c：绑定工作坊注册按钮（点击时会更新数据，添加工作坊时间和兴趣）
+        // 重新绑定按钮事件
         const workshopBtn = document.getElementById('workshopInterestBtn');
         const newBtn = workshopBtn.cloneNode(true);
         workshopBtn.parentNode.replaceChild(newBtn, workshopBtn);
         
         newBtn.addEventListener('click', async () => {
-            const freeTimeVal = document.getElementById('freeTimeSelect').value;
-            if (!freeTimeVal || freeTimeVal === "") {
-                alert("Please select your preferred time slot for the workshop.");
-                return;
-            }
-            
-            const statusDiv = document.getElementById('workshopStatus');
-            statusDiv.style.display = "block";
-            statusDiv.innerHTML = "⏳ Updating your workshop registration...";
-            statusDiv.style.background = "#eef3fa";
-            
-            try {
-                // 更新本地数据库，添加工作坊兴趣和时间（workshopInterest = true）
-                await saveRegistration(name, phone, emailVal, freeTimeVal, scores, primary.code, secondary.code, fullAnalysisHtml, true);
-                
-                // 更新 Google Sheets 中的工作坊兴趣状态
-                const primaryStyleName = `${primary.fullData.fullName} (${primary.code})`;
-                const secondaryStyleName = `${secondary.fullData.fullName} (${secondary.code})`;
-                const cloudSaved = await saveToCloud(name, phone, emailVal, freeTimeVal, scores, primaryStyleName, secondaryStyleName, "Yes - Registered");
-                
-                if (cloudSaved) {
-                    statusDiv.innerHTML = `✅ Thank you ${name}! Your workshop interest has been saved. We'll contact you about (${freeTimeVal}).`;
-                    statusDiv.style.background = "#e0f2e9";
-                } else {
-                    statusDiv.innerHTML = `✅ Your interest has been saved locally. We'll contact you about the workshop.`;
-                    statusDiv.style.background = "#fff3cd";
-                }
-            } catch(e) {
-                statusDiv.innerHTML = `⚠️ Error: ${e.message}`;
-                statusDiv.style.background = "#ffe6e5";
-            }
-        });
+    const freeTimeVal = document.getElementById('freeTimeSelect').value;
+    if (!freeTimeVal || freeTimeVal === "") {
+        alert("Please select your preferred time slot for the workshop.");
+        return;
+    }
+    const emailVal = document.getElementById('email').value.trim();
+    
+    const statusDiv = document.getElementById('workshopStatus');
+    statusDiv.style.display = "block";
+    statusDiv.innerHTML = "⏳ Saving your data to Google Sheets...";
+    statusDiv.style.background = "#eef3fa";
+    
+    try {
+        // 1. 保存到本地 IndexedDB
+        await saveRegistration(name, phone, emailVal, freeTimeVal, scores, primary.code, secondary.code, fullAnalysisHtml);
+        
+        // 2. 发送到 Google Sheets（这是之前缺失的关键调用！）
+        const sheetData = {
+            name: name,
+            phone: phone,
+            email: emailVal,
+            freeTime: freeTimeVal,
+            scores: { ce: scores.ce, ro: scores.ro, ac: scores.ac, ae: scores.ae },
+            primaryStyle: `${primary.fullData.fullName} (${primary.code})`,
+            secondaryStyle: `${secondary.fullData.fullName} (${secondary.code})`,
+            workshopInterest: "Yes - Registered"
+        };
+        
+        const googleSaved = await sendToGoogleSheets(sheetData);
+        
+        if (googleSaved) {
+            statusDiv.innerHTML = `✅ Thank you ${name}! Your data has been saved to Google Sheets. We'll contact you about the workshop (${freeTimeVal}).`;
+            statusDiv.style.background = "#e0f2e9";
+        } else {
+            statusDiv.innerHTML = `✅ Data saved locally! (Google Sheets connection issue, but we have your info.)`;
+            statusDiv.style.background = "#fff3cd";
+        }
+        
+        document.getElementById('saveStatus').style.display = "block";
+        document.getElementById('saveStatus').innerHTML = "Your learning profile and workshop interest have been recorded.";
+        document.getElementById('saveStatus').style.background = "#e9f4ea";
+        
+    } catch(e) {
+        statusDiv.innerHTML = `⚠️ Save error: ${e.message}`;
+        statusDiv.style.background = "#ffe6e5";
+    }
+});
+        
+        try {
+            await initDB();
+            await saveRegistration(name, phone, document.getElementById('email').value.trim(), "pending_selection", scores, primary.code, secondary.code, fullAnalysisHtml);
+            document.getElementById('saveStatus').style.display = "block";
+            document.getElementById('saveStatus').innerHTML = "✅ Test results saved. You can register interest above.";
+        } catch(e) { console.warn(e); }
     }
     
-    // resetAll 函数（未修改核心逻辑，仅微调）
     function resetAll() {
         document.querySelectorAll('.points-input').forEach(inp => { inp.value = ''; inp.classList.remove('error-border'); });
         document.getElementById('ceScore').innerText = '-';
@@ -945,22 +911,14 @@
         document.getElementById('workshopSection').style.display = 'none';
         document.getElementById('saveStatus').style.display = 'none';
         document.getElementById('workshopStatus').style.display = 'none';
-        document.getElementById('fullName').focus();
     }
-
-    // 访客计数器（未修改）
-    let hasCounted = sessionStorage.getItem('kolbCounted');
-    if (!hasCounted) {
-        let count = localStorage.getItem('kolbVisits') || 0;
-        count = parseInt(count) + 1;
-        localStorage.setItem('kolbVisits', count);
-        sessionStorage.setItem('kolbCounted', 'true');
-        document.getElementById('visitCounter').innerText = count;
-    } else {
-        document.getElementById('visitCounter').innerText = localStorage.getItem('kolbVisits') || 0;
-    }
-
-    // 页面加载初始化（未修改）
+    
     window.addEventListener('DOMContentLoaded', () => {
         buildTable();
-        initDB().catch
+        initDB().catch(e=>console.warn);
+        document.getElementById('calcBtn').addEventListener('click', calculateAndShow);
+        document.getElementById('resetFormBtn').addEventListener('click', resetAll);
+    });
+</script>
+</body>
+</html>
