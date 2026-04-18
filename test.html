@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Kolb Learning Style Workshop | Full Dual-Style Analysis</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, 'Segoe UI', 'Roboto', 'Noto Sans', sans-serif;
+        }
+        body {
+            background: #f0f7ff;
+            margin: 0;
+            padding: 24px 16px;
+            color: #1a2c3e;
+        }
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.15);
+            overflow: hidden;
+            padding: 24px 28px 40px;
+        }
+        /* 浏览计数器样式 */
+        .visitor-counter {
+            background: linear-gradient(135deg, #1e4b6e, #2c7da0);
+            color: white;
+            border-radius: 40px;
+            padding: 8px 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .counter-number {
+            background: white;
+            color: #1e4b6e;
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-weight: 800;
+            font-size: 1.2rem;
+            min-width: 60px;
+            text-align: center;
+        }
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+        h1 {
+            font-size: 1.9rem;
+            font-weight: 600;
+            margin: 0 0 0.25rem 0;
+            background: linear-gradient(135deg, #1E4B6E, #2c7da0);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .sub {
+            color: #4b6a7c;
+            border-left: 4px solid #2c7da0;
+            padding-left: 16px;
+            margin: 12px 0 28px 0;
+            font-weight: 500;
+        }
+        .info-panel {
+            background: #eef3fa;
+            border-radius: 24px;
+            padding: 18px 24px;
+            margin-bottom: 32px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        .field-group {
+            flex: 1;
+            min-width: 170px;
+        }
+        .field-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+            color: #1f5068;
+        }
+        .field-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #cbdde6;
+            border-radius: 20px;
+            font-size: 1rem;
+            background: white;
+            transition: 0.2s;
+        }
+        .field-group input:focus {
+            outline: none;
+            border-color: #2c7da0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.2);
+        }
+        .test-grid {
+            overflow-x: auto;
+            margin: 20px 0 20px;
+            border-radius: 24px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+            min-width: 800px;
+            background: white;
+        }
+        th {
+            background: #e2edf5;
+            padding: 14px 8px;
+            font-weight: 700;
+            text-align: center;
+            border-bottom: 2px solid #bdd4e2;
+            color: #1e4b6e;
+        }
+        td {
+            border: 1px solid #dde6ed;
+            padding: 12px 8px;
+            vertical-align: top;
+        }
+        .row-label {
+            background: #f8fafc;
+            font-weight: 700;
+            text-align: center;
+            width: 55px;
+        }
+        .question-text {
+            font-size: 0.82rem;
+            line-height: 1.4;
+            color: #1f3b4a;
+            display: block;
+            margin-top: 6px;
+        }
+        .points-input {
+            width: 75px;
+            padding: 8px 6px;
+            text-align: center;
+            font-weight: 500;
+            border: 1px solid #b9d0dd;
+            border-radius: 28px;
+            background: #ffffff;
+            font-size: 0.9rem;
+        }
+        .points-input:focus {
+            border-color: #2c7da0;
+            outline: none;
+            box-shadow: 0 0 0 2px #b8dfef;
+        }
+        .instruction-note {
+            background: #fef7e0;
+            padding: 12px 18px;
+            border-radius: 20px;
+            margin: 16px 0 20px;
+            font-size: 0.85rem;
+            color: #7a6300;
+            border-left: 5px solid #ffcd7e;
+        }
+        .score-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin: 30px 0 20px;
+            justify-content: center;
+        }
+        .score-card {
+            background: #f3f9fe;
+            border-radius: 28px;
+            padding: 16px 22px;
+            text-align: center;
+            flex: 1;
+            min-width: 130px;
+            box-shadow: 0 5px 12px rgba(0,0,0,0.03);
+            border: 1px solid #d9e6f0;
+        }
+        .score-label {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        .score-value {
+            font-size: 2.6rem;
+            font-weight: 800;
+            margin: 8px 0;
+            color: #1f6392;
+        }
+        .learning-style {
+            background: #1e4b6e;
+            color: white;
+            border-radius: 40px;
+            padding: 14px 24px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 20px 0 10px;
+        }
+        .insight-box {
+            background: #f9fafb;
+            border-radius: 28px;
+            padding: 20px 26px;
+            margin: 20px 0 25px;
+            border-left: 8px solid #2c7da0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .insight-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #1f5068;
+        }
+        .insight-section {
+            margin-top: 22px;
+            padding: 12px 0;
+            border-bottom: 1px solid #e2edf5;
+        }
+        .insight-section:last-child {
+            border-bottom: none;
+        }
+        .insight-section h4 {
+            font-size: 1.1rem;
+            margin: 0 0 10px 0;
+            color: #1e4b6e;
+        }
+        .insight-section p {
+            margin: 6px 0;
+            line-height: 1.5;
+        }
+        .workshop-card {
+            background: linear-gradient(105deg, #eef2f7 0%, #ffffff 100%);
+            border-radius: 32px;
+            padding: 22px 28px;
+            margin-top: 28px;
+            border: 1px solid #cde3ef;
+        }
+        .time-selector-group {
+            margin: 20px 0 15px;
+        }
+        .time-selector-group label {
+            font-weight: 700;
+            display: block;
+            margin-bottom: 10px;
+            color: #1f5068;
+            font-size: 1rem;
+        }
+        .time-selector-group select {
+            width: 100%;
+            max-width: 350px;
+            padding: 12px 16px;
+            border-radius: 28px;
+            border: 1px solid #b9d0dd;
+            background: white;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+        .btn-group {
+            display: flex;
+            gap: 18px;
+            justify-content: center;
+            margin: 28px 0 20px;
+            flex-wrap: wrap;
+        }
+        button {
+            background: #2c7da0;
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 12px 32px;
+            border-radius: 40px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:hover {
+            background: #1f5e7e;
+            transform: translateY(-1px);
+        }
+        .reset-btn {
+            background: #5f8da0;
+        }
+        .workshop-btn {
+            background: #2c6e4f;
+            font-size: 1rem;
+            padding: 12px 28px;
+            margin-top: 10px;
+        }
+        .workshop-btn:hover {
+            background: #1f5440;
+        }
+        .status-msg {
+            background: #e9f4ea;
+            color: #2e6b3e;
+            border-radius: 30px;
+            padding: 12px 20px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        footer {
+            font-size: 0.75rem;
+            text-align: center;
+            color: #7f9aad;
+            margin-top: 32px;
+            border-top: 1px solid #e2edf5;
+            padding-top: 18px;
+        }
+        .error-border {
+            border: 2px solid #e07a5f !important;
+            background-color: #fff8f5;
+        }
+        @media (max-width: 680px) {
+            .container { padding: 16px; }
+            .points-input { width: 60px; }
+            .visitor-counter { font-size: 0.75rem; padding: 4px 12px; }
+            .counter-number { font-size: 1rem; padding: 2px 10px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- 浏览计数器 - 显示在顶部 -->
+    <div style="display: flex; justify-content: flex-end;">
+        <div class="visitor-counter">
+            <span>👁️ Website Visits</span>
+            <span class="counter-number" id="visitCounter">0</span>
+        </div>
+    </div>
+    
+    <div class="header-row">
+        <h1>📘 Kolb Learning Style & Workshop Interest</h1>
+    </div>
+    <div class="sub">Discover your dominant learning styles (CE·RO·AC·AE) + full personalized strategies based on your top two styles</div>
+
+    <!-- 个人信息区域 -->
+    <div class="info-panel">
+        <div class="field-group">
+            <label>👤 Full Name *</label>
+            <input type="text" id="fullName" placeholder="e.g., Emma Johnson" autocomplete="off">
+        </div>
+        <div class="field-group">
+            <label>📞 Phone Number *</label>
+            <input type="tel" id="phone" placeholder="Mobile / WhatsApp" autocomplete="off">
+        </div>
+        <div class="field-group">
+            <label>📧 Email (optional)</label>
+            <input type="email" id="email" placeholder="name@example.com" autocomplete="off">
+        </div>
+    </div>
+
+    <div class="instruction-note">
+        ✏️ <strong>Scoring Rules:</strong> Each row (1-9) assign <strong>4,3,2,1</strong> exactly once. <br>
+        4 = Most like you | 1 = Least like you. After calculation, you will see BOTH of your top learning styles with complete techniques, challenges, and action steps.
+    </div>
+
+    <div class="test-grid">
+        <table id="testTable">
+            <thead>
+                <tr><th>#</th><th>🎯 Concrete Experience (CE)</th><th>🧠 Reflective Observation (RO)</th><th>📐 Abstract Conceptualization (AC)</th><th>⚡ Active Experimentation (AE)</th></tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
+
+    <div class="btn-group">
+        <button id="calcBtn">📊 Calculate & Show Full Analysis</button>
+        <button id="resetFormBtn" class="reset-btn">⟳ Reset All Items</button>
+    </div>
+
+    <div id="resultArea">
+        <div class="score-cards">
+            <div class="score-card"><div class="score-label">CE<br>(Concrete)</div><div class="score-value" id="ceScore">-</div></div>
+            <div class="score-card"><div class="score-label">RO<br>(Reflective)</div><div class="score-value" id="roScore">-</div></div>
+            <div class="score-card"><div class="score-label">AC<br>(Abstract)</div><div class="score-value" id="acScore">-</div></div>
+            <div class="score-card"><div class="score-label">AE<br>(Active)</div><div class="score-value" id="aeScore">-</div></div>
+        </div>
+        <div id="styleMessage" class="learning-style" style="background: #2c7da0;">✨ Complete & calculate your profile ✨</div>
+        
+        <div id="insightPanel" class="insight-box" style="display: none;"></div>
+        
+        <!-- 工作坊兴趣区域 -->
+        <div id="workshopSection" class="workshop-card" style="display: none;">
+            <h3>📢 Interested in a Workshop on "Practical Learning Techniques"?</h3>
+            <p>Based on your unique style combination, we will design hands-on sessions: real-world case studies, reflective discussions, or experimental labs. Leave your availability and we'll notify you about upcoming workshops.</p>
+            
+            <div class="time-selector-group">
+                <label>🗓️ What is your best available time for the workshop?</label>
+                <select id="freeTimeSelect">
+                    <option value="" disabled selected>-- Select your preferred time slot --</option>
+                    <optgroup label="Monday">
+                        <option value="Monday morning (9:00-12:00)">Monday morning (9:00-12:00)</option>
+                        <option value="Monday afternoon (14:00-17:00)">Monday afternoon (14:00-17:00)</option>
+                        <option value="Monday evening (18:00-21:00)">Monday evening (18:00-21:00)</option>
+                    </optgroup>
+                    <optgroup label="Tuesday">
+                        <option value="Tuesday morning (9:00-12:00)">Tuesday morning (9:00-12:00)</option>
+                        <option value="Tuesday afternoon (14:00-17:00)">Tuesday afternoon (14:00-17:00)</option>
+                        <option value="Tuesday evening (18:00-21:00)">Tuesday evening (18:00-21:00)</option>
+                    </optgroup>
+                    <optgroup label="Wednesday">
+                        <option value="Wednesday morning (9:00-12:00)">Wednesday morning (9:00-12:00)</option>
+                        <option value="Wednesday afternoon (14:00-17:00)">Wednesday afternoon (14:00-17:00)</option>
+                        <option value="Wednesday evening (18:00-21:00)">Wednesday evening (18:00-21:00)</option>
+                    </optgroup>
+                    <optgroup label="Thursday">
+                        <option value="Thursday morning (9:00-12:00)">Thursday morning (9:00-12:00)</option>
+                        <option value="Thursday afternoon (14:00-17:00)">Thursday afternoon (14:00-17:00)</option>
+                        <option value="Thursday evening (18:00-21:00)">Thursday evening (18:00-21:00)</option>
+                    </optgroup>
+                    <optgroup label="Friday">
+                        <option value="Friday morning (9:00-12:00)">Friday morning (9:00-12:00)</option>
+                        <option value="Friday afternoon (14:00-17:00)">Friday afternoon (14:00-17:00)</option>
+                        <option value="Friday evening (18:00-21:00)">Friday evening (18:00-21:00)</option>
+                    </optgroup>
+                    <optgroup label="Weekend">
+                        <option value="Saturday morning (10:00-13:00)">Saturday morning (10:00-13:00)</option>
+                        <option value="Saturday afternoon (14:00-17:00)">Saturday afternoon (14:00-17:00)</option>
+                        <option value="Sunday morning (10:00-13:00)">Sunday morning (10:00-13:00)</option>
+                        <option value="Sunday afternoon (14:00-17:00)">Sunday afternoon (14:00-17:00)</option>
+                    </optgroup>
+                    <option value="Flexible (any time works for me)">Flexible (any time works for me)</option>
+                </select>
+            </div>
+            
+            <button id="workshopInterestBtn" class="workshop-btn">✉️ Register Interest & Save My Data</button>
+            <div id="workshopStatus" class="status-msg" style="margin-top: 16px; display: none;"></div>
+        </div>
+        <div id="saveStatus" class="status-msg" style="display: none;"></div>
+    </div>
+    <footer>🔍 Data stored locally (IndexedDB) — workshop interest used only for session planning. | Total visits: <span id="footerCounter">0</span></footer>
+</div>
+
+<script>
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx9wpGbXA47GTE646PNM8SVAl8WgHV5g46VrHyaBUiSIWNrqRZtdYGUKg57AkRaAt2fYg/exec';
+    // ======================= 浏览计数器功能 =======================
+    // 使用 localStorage 存储网站总浏览次数
+    function updateVisitCounter() {
+        let visitCount = localStorage.getItem('kolbWebsiteVisits');
+        if (visitCount === null) {
+            visitCount = 1;
+        } else {
+            visitCount = parseInt(visitCount) + 1;
+        }
+        localStorage.setItem('kolbWebsiteVisits', visitCount);
+        
+        // 更新页面上的显示
+        const counterElement = document.getElementById('visitCounter');
+        const footerCounter = document.getElementById('footerCounter');
+        if (counterElement) counterElement.innerText = visitCount;
+        if (footerCounter) footerCounter.innerText = visitCount;
+        return visitCount;
+    }
+    
+    // 页面加载时增加计数（使用 sessionStorage 防止同一会话内重复刷新多次计数）
+    // 但为了更真实的浏览计数，每次页面刷新都计数（符合一般网站计数器逻辑）
+    // 直接调用更新
+    let hasCountedThisSession = sessionStorage.getItem('kolbCountedThisSession');
+    if (!hasCountedThisSession) {
+        updateVisitCounter();
+        sessionStorage.setItem('kolbCountedThisSession', 'true');
+    } else {
+        // 仅显示已有数值，不再增加
+        let existingCount = localStorage.getItem('kolbWebsiteVisits') || 0;
+        document.getElementById('visitCounter').innerText = existingCount;
+        document.getElementById('footerCounter').innerText = existingCount;
+    }
+    
+    // 确保页面显示正确的数字（即使 session 已有）
+    window.addEventListener('DOMContentLoaded', () => {
+        let count = localStorage.getItem('kolbWebsiteVisits') || 0;
+        const counterElem = document.getElementById('visitCounter');
+        if (counterElem && counterElem.innerText === '0') {
+            counterElem.innerText = count;
+            const footerCounter = document.getElementById('footerCounter');
+            if (footerCounter) footerCounter.innerText = count;
+        }
+    });
+    // ==============================================================
+    
+    // 9 ROWS - English version
+    const rowsData = [
+        { ce: "Loves having the freedom to choose", ro: "Doesn’t jump right in, but prefers to watch at first", ac: "Organizes own study plan, looks for own books", ae: "More interested in practice than theory" },
+        { ce: "Likes new experiences, dealing with new situations", ro: "Concentrates on meaningful things", ac: "Logical structure, theory and details", ae: "Looking for truth, somewhat distant" },
+        { ce: "Spectator, prefers observing, loves clarity", ro: "Thinker, likes to discuss and ask questions", ac: "Studious, reads numerous books and articles", ae: "Emotions give impulse to act" },
+        { ce: "Willingly accepts help and instruction", ro: "Has no fear of making mistakes", ac: "Doesn’t easily believe, needs information", ae: "Resolves to learn from certain experiences" },
+        { ce: "Intuitive, inspired by situations", ro: "Achievement-oriented, focused on good result", ac: "Logical, loves logical structure", ae: "Inquisitive, learns through inquiry" },
+        { ce: "Prefers theory separate from visible situations", ro: "Wants to observe concrete situations", ac: "Likes tangible things, opposite of abstract", ae: "Seeks opportunities to act, wants to try out" },
+        { ce: "Thinks about experiences and things seen", ro: "Skills now to use them in the future", ac: "Focused on practical application", ae: "Wants to experience the here and now" },
+        { ce: "Wants to act right away", ro: "Likes to observe and ask questions", ac: "Thinks things through, logical structure", ae: "Enjoys trying out new things" },
+        { ce: "Prefers strong stimulation", ro: "Does not typically go against set rules", ac: "Loves theories and complex structures", ae: "Likes self-responsibility and clear goals" }
+    ];
+
+    // 完整的学习风格分析库
+    const fullStyleLibrary = {
+        CE: {
+            fullName: "Concrete Experience Type",
+            techniques: "✅ Hands-on learning & practice: Learn best through direct experience and applying material in real actions.<br>" +
+                "✅ Values demonstrations & structure: Prefers step-by-step explanations and clear logical flow. Favorite mode is watching others demonstrate first, then trying it themselves.<br>" +
+                "✅ Environmental needs: Requires an organized, quiet environment and enjoys physically interacting with learning materials.<br>" +
+                "✅ Best learning methods: Ample internship opportunities; workshop discussions.<br>" +
+                "✅ Actionable steps: Attend workshops with live demonstrations, actively seek useful illustrations, gain practical experience; when facing theoretical material, actively convert it into concrete forms (drawings, maps, tables).",
+            challenges: "⚠️ Frustrated by lack of structure: Feels very disappointed if discussions are overly theoretical or lack organization.<br>" +
+                "⚠️ Strongly dislikes vague instructions: Exercises with unclear instructions are definitely not their favorite learning activity.<br>" +
+                "⚠️ Uncomfortable with independent problem-solving: Tasks requiring independent problem-solving feel difficult; they need clear guidance and demonstrations.",
+            actionSteps: "🎯 Seek demonstration opportunities: Attend workshops with live demonstrations, gain practical experience.<br>" +
+                "🎯 Make theory concrete: When facing purely theoretical material, actively convert it into concrete forms using drawings, maps, and tables.<br>" +
+                "🎯 Request structured guidance: Ask for step-by-step demonstrations and clear instructions when learning new skills."
+            },
+        RO: {
+            fullName: "Reflective Observation Type",
+            techniques: "✅ Participate in group discussions: Best learning methods include pair/group discussions.<br>" +
+                "✅ Use visual aids: Learn better with visual aids.<br>" +
+                "✅ Attend short lectures with Q&A time.<br>" +
+                "✅ Observe more, listen more, engage in active environments: Recommended to attend seminars and university lectures; learn best in highly active environments with plenty of content to observe.<br>" +
+                "✅ Deliberate discussion after class: After seminars or lectures, consciously discuss the content with colleagues or instructors to greatly aid material digestion.",
+            challenges: "⚠️ Lack of motivation for systematic follow-up & deep reading: After initial observation and discussion, often need to force themselves to do more systematic follow-up learning and deeper reading.<br>" +
+                "⚠️ Discomfort with rigid rules and inflexible environments: Prefers open, unstructured environments without strict rules; likes organizing learning materials themselves. Efficiency drops in rigid or passive spoon-fed environments.<br>" +
+                "⚠️ Over-observation before action: May be slow or struggle in situations requiring immediate action or quick responses.",
+            actionSteps: "🎯 Set follow-up learning plans: Force yourself to do systematic follow-up reading and material organization.<br>" +
+                "🎯 Seek open learning environments: Avoid overly rigid courses; choose seminars with discussion space.<br>" +
+                "🎯 Balance observation and action: Consciously set action deadlines for yourself to avoid over-observing."
+            },
+        AC: {
+            fullName: "Abstract Conceptualization Type",
+            techniques: "✅ Core learning approach: Learn primarily by analyzing abstract thinking models and concepts; rely on logical thinking; strongly prefer symbols, pictures, and text.<br>" +
+                "✅ Best learning methods: Reading books and manuals, completing homework, listening to theoretical explanations, conducting in-depth analysis and interpretation.<br>" +
+                "✅ Preferred learning environment: Prefers highly visual methods (text, pictures, charts); enjoys absorbing large amounts of information; favors logically rigorous, content-rich learning programs.<br>" +
+                "✅ Open to authority; values original sources and multiple textbooks.<br>" +
+                "✅ Typical scenario: When learning to drive, best approach is learning through pure theoretical instruction.",
+            challenges: "⚠️ Easily lost in details: Loves absorbing large amounts of material and highly values multiple research sources; often faces the challenge of getting lost in details.<br>" +
+                "⚠️ Over-research leading to loss of focus: While extensively researching books and materials, may overlook relevance to core topic, reducing learning efficiency.",
+            actionSteps: "🎯 Carefully select resources and environment: Strictly choose which lectures and books to engage with. A quiet, resource-rich library is an ideal place.<br>" +
+                "🎯 Create personalized knowledge frameworks: Must create personalized overview diagrams (concept maps) during learning to help clarify complex logic.<br>" +
+                "🎯 Strict time and goal management: Regularly check relevance of current learning materials; strictly adhere to preset study time for each topic.<br>" +
+                "🎯 Learn to do less: Resist the urge to over-research when reviewing materials; remember that 'reading fewer books is often a better choice.'"
+            },
+        AE: {
+            fullName: "Active Experimentation Type",
+            techniques: "✅ True 'learning by doing': Not afraid of failure; prefers finding their own solutions, enjoys experimentation, loves practical application.<br>" +
+                "✅ Values tasks over rote memorization: Compared to being force-fed materials and required to memorize and recite verbatim, prefers clear or goal-specific tasks.<br>" +
+                "✅ Flexible learning environment: Learns well both when alone and in creative team interactions.<br>" +
+                "✅ Best learning methods: Learning through trial and error, asking questions, playing games, role-playing; self-study, case studies, completing problem-solving exercises.",
+            challenges: "⚠️ Struggles with purely theoretical subjects: Typical AE learners often feel very unhappy or frustrated in purely theoretical subject areas.<br>" +
+                "⚠️ Impatient with pure observation or rote memorization: If the learning process only requires silent observation or rote memorization, learning motivation and efficiency drop significantly.",
+            actionSteps: "🎯 Seize opportunities for action and practice: Take action and practice rather than relying on observation from the sidelines.<br>" +
+                "🎯 Impose 'real-world meaning' on pure theory: When required to take theory classes, actively imagine practical application scenarios for the theoretical material in real life to stimulate learning interest.<br>" +
+                "🎯 Typical scenario: When learning to drive, ideal state is trying it themselves in an open space, even without guidance from an instructor."
+            }
+    };
+
+    // 获取所有输入框（按顺序）
+    function getAllInputs() {
+        const inputs = [];
+        // 个人信息输入框
+        const nameInput = document.getElementById('fullName');
+        const phoneInput = document.getElementById('phone');
+        const emailInput = document.getElementById('email');
+        if (nameInput) inputs.push(nameInput);
+        if (phoneInput) inputs.push(phoneInput);
+        if (emailInput) inputs.push(emailInput);
+        
+        // 表格中的所有数字输入框
+        const tableInputs = document.querySelectorAll('.points-input');
+        tableInputs.forEach(inp => inputs.push(inp));
+        
+        return inputs;
+    }
+
+    // 设置 Enter 键跳转功能
+    function setupEnterNavigation() {
+        const allInputs = getAllInputs();
+        
+        for (let i = 0; i < allInputs.length; i++) {
+            const input = allInputs[i];
+            input.removeEventListener('keydown', handleEnterKey);
+            input.addEventListener('keydown', handleEnterKey);
+            
+            // 存储当前索引以便在事件处理中使用
+            input.setAttribute('data-input-index', i);
+        }
+    }
+    
+    function handleEnterKey(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // 阻止表单提交等默认行为
+            
+            const currentIndex = parseInt(this.getAttribute('data-input-index'));
+            const allInputs = getAllInputs();
+            
+            // 跳转到下一个输入框
+            if (currentIndex < allInputs.length - 1) {
+                const nextInput = allInputs[currentIndex + 1];
+                nextInput.focus();
+                nextInput.select(); // 选中文本方便直接输入
+            } else {
+                // 如果是最后一个输入框，聚焦到计算按钮
+                const calcBtn = document.getElementById('calcBtn');
+                if (calcBtn) calcBtn.focus();
+            }
+        }
+    }
+    
+    // 当动态添加新元素时重新绑定
+    function refreshEnterNavigation() {
+        setTimeout(() => {
+            const allInputs = getAllInputs();
+            for (let i = 0; i < allInputs.length; i++) {
+                const input = allInputs[i];
+                input.setAttribute('data-input-index', i);
+                input.removeEventListener('keydown', handleEnterKey);
+                input.addEventListener('keydown', handleEnterKey);
+            }
+        }, 50);
+    }
+
+    function buildTable() {
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = '';
+        for (let i = 0; i < rowsData.length; i++) {
+            const row = rowsData[i];
+            const tr = document.createElement('tr');
+            const tdLabel = document.createElement('td'); tdLabel.className = 'row-label'; tdLabel.innerText = (i+1).toString(); tr.appendChild(tdLabel);
+            [row.ce, row.ro, row.ac, row.ae].forEach((text, colIdx) => {
+                const td = document.createElement('td');
+                const inp = document.createElement('input');
+                inp.type = 'number'; inp.className = 'points-input'; inp.placeholder = '4-1'; inp.min = 1; inp.max = 4;
+                inp.setAttribute('data-row', i); inp.setAttribute('data-col', colIdx);
+                td.appendChild(inp);
+                const span = document.createElement('span'); span.className = 'question-text'; span.innerText = text; td.appendChild(span);
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        }
+        attachValidations();
+        refreshEnterNavigation(); // 表格构建后重新绑定 Enter 导航
+    }
+    
+    function validateSingleRow(rowIdx) {
+        const inputs = document.querySelectorAll(`input[data-row='${rowIdx}']`);
+        let values = [];
+        inputs.forEach(inp => { let v = parseInt(inp.value); if (isNaN(v)) values.push(NaN); else values.push(v); });
+        if (values.some(isNaN)) { inputs.forEach(i => i.classList.add('error-border')); return false; }
+        const sorted = [...values].sort((a,b)=>a-b);
+        const isValid = sorted[0]===1 && sorted[1]===2 && sorted[2]===3 && sorted[3]===4;
+        inputs.forEach(inp => isValid ? inp.classList.remove('error-border') : inp.classList.add('error-border'));
+        return isValid;
+    }
+    
+    function attachValidations() {
+        for (let i = 0; i < rowsData.length; i++) {
+            const inputs = document.querySelectorAll(`input[data-row='${i}']`);
+            inputs.forEach(inp => {
+                inp.addEventListener('change', () => validateSingleRow(i));
+                inp.addEventListener('input', function() { let v = parseInt(this.value); if (!isNaN(v)) { if(v<1) this.value=1; if(v>4) this.value=4; } validateSingleRow(i); });
+            });
+        }
+    }
+    
+    function allRowsValid() { for(let i=0;i<rowsData.length;i++) if(!validateSingleRow(i)) return false; return true; }
+    
+    function getMatrix() {
+        const m = Array(rowsData.length).fill().map(()=>[0,0,0,0]);
+        for(let i=0;i<rowsData.length;i++) for(let c=0;c<4;c++) { let inp = document.querySelector(`input[data-row='${i}'][data-col='${c}']`); if(inp && inp.value) m[i][c] = parseInt(inp.value) || 0; }
+        return m;
+    }
+    
+    function computeScores(matrix) {
+        let ce=0, ro=0, ac=0, ae=0;
+        [1,2,3,4,6,7].forEach(r => { if(matrix[r]) ce += matrix[r][0]; });
+        [0,2,5,6,7,8].forEach(r => { if(matrix[r]) ro += matrix[r][1]; });
+        [1,2,3,4,7,8].forEach(r => { if(matrix[r]) ac += matrix[r][2]; });
+        [0,2,5,6,7,8].forEach(r => { if(matrix[r]) ae += matrix[r][3]; });
+        return {ce,ro,ac,ae};
+    }
+    
+    function getTopTwoStyles(scores) {
+        const map = [
+            { code: "CE", value: scores.ce, fullData: fullStyleLibrary.CE },
+            { code: "RO", value: scores.ro, fullData: fullStyleLibrary.RO },
+            { code: "AC", value: scores.ac, fullData: fullStyleLibrary.AC },
+            { code: "AE", value: scores.ae, fullData: fullStyleLibrary.AE }
+        ];
+        map.sort((a,b)=>b.value - a.value);
+        return [map[0], map[1]];
+    }
+    
+    function generateFullAnalysis(primary, secondary) {
+        const p = primary.fullData;
+        const s = secondary.fullData;
+        
+        const primaryHtml = `
+            <div class="insight-section">
+                <h4>🎓 Primary Learning Style: ${p.fullName} (${primary.code})</h4>
+                <p><strong>📌 Learning Techniques & Methods:</strong><br>${p.techniques}</p>
+                <p><strong>⚠️ Challenges & Difficulties:</strong><br>${p.challenges}</p>
+                <p><strong>🚀 Practical Action Strategies:</strong><br>${p.actionSteps}</p>
+            </div>
+        `;
+        
+        const secondaryHtml = `
+            <div class="insight-section">
+                <h4>✨ Secondary Learning Style: ${s.fullName} (${secondary.code})</h4>
+                <p><strong>📌 Learning Techniques & Methods:</strong><br>${s.techniques}</p>
+                <p><strong>⚠️ Challenges & Difficulties:</strong><br>${s.challenges}</p>
+                <p><strong>🚀 Practical Action Strategies:</strong><br>${s.actionSteps}</p>
+                <p><strong>⚡ Integration Tip:</strong> Combine your ${primary.code} strengths with ${secondary.code} strategies to create a balanced and powerful learning approach.</p>
+            </div>
+        `;
+        
+        return primaryHtml + secondaryHtml;
+    }
+    
+    // IndexedDB
+    let db = null;
+    function initDB() {
+        return new Promise((resolve, reject) => {
+            const req = indexedDB.open("KolbWorkshopDB", 2);
+            req.onerror = () => reject("DB error");
+            req.onsuccess = (e) => { db = e.target.result; resolve(db); };
+            req.onupgradeneeded = (e) => {
+                const dbRef = e.target.result;
+                if (!dbRef.objectStoreNames.contains("workshopRegistrations")) {
+                    const store = dbRef.createObjectStore("workshopRegistrations", { keyPath: "id", autoIncrement: true });
+                    store.createIndex("phone", "phone", { unique: false });
+                    store.createIndex("timestamp", "timestamp");
+                }
+            };
+        });
+    }
+    
+    async function saveRegistration(name, phone, email, freeTime, scores, primaryCode, secondaryCode, fullAnalysisHtml) {
+        if (!db) await initDB();
+        const tx = db.transaction(["workshopRegistrations"], "readwrite");
+        const store = tx.objectStore("workshopRegistrations");
+        const record = {
+            name: name.trim(),
+            phone: phone.trim(),
+            email: email.trim() || "",
+            availableTime: freeTime,
+            ce: scores.ce, ro: scores.ro, ac: scores.ac, ae: scores.ae,
+            primaryStyle: primaryCode,
+            secondaryStyle: secondaryCode,
+            insightSummary: fullAnalysisHtml.substring(0, 800),
+            workshopInterest: true,
+            timestamp: new Date().toISOString()
+        };
+        return new Promise((resolve, reject) => {
+            const req = store.add(record);
+            req.onsuccess = () => resolve(true);
+            req.onerror = (err) => reject(err);
+        });
+    }
+
+
+    async function sendToGoogleSheets(data) {
+    // 检查 GOOGLE_SCRIPT_URL 是否已定义
+    if (typeof GOOGLE_SCRIPT_URL === 'undefined' || !GOOGLE_SCRIPT_URL) {
+        console.warn('GOOGLE_SCRIPT_URL is not defined');
+        return false;
+    }
+    
+    // 检查是否是默认的占位符（注意：不要判断具体的真实 URL）
+    if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
+        console.warn('Please replace GOOGLE_SCRIPT_URL with your actual Google Apps Script URL');
+        return false;
+    }
+    
+    console.log('Sending data to:', GOOGLE_SCRIPT_URL);
+    
+    try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        console.log('Data sent to Google Sheets successfully');
+        return true;
+    } catch (error) {
+        console.error('Error sending to Google Sheets:', error);
+        return false;
+    }
+}
+    
+    async function calculateAndShow() {
+        const name = document.getElementById('fullName').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        if (!name) { alert("Please enter your name."); return; }
+        if (!phone) { alert("Phone number is required for workshop updates."); return; }
+        if (!allRowsValid()) { alert("Each row must contain 4,3,2,1 exactly once. Fix red-bordered cells."); return; }
+        
+        const matrix = getMatrix();
+        const scores = computeScores(matrix);
+        const topTwo = getTopTwoStyles(scores);
+        const primary = topTwo[0];
+        const secondary = topTwo[1];
+        
+        const fullAnalysisHtml = generateFullAnalysis(primary, secondary);
+        
+        document.getElementById('ceScore').innerText = scores.ce;
+        document.getElementById('roScore').innerText = scores.ro;
+        document.getElementById('acScore').innerText = scores.ac;
+        document.getElementById('aeScore').innerText = scores.ae;
+        document.getElementById('styleMessage').innerHTML = `🧠 Your dominant styles: ${primary.fullData.fullName} (${primary.code}) + ${secondary.fullData.fullName} (${secondary.code})`;
+        
+        const insightDiv = document.getElementById('insightPanel');
+        insightDiv.style.display = "block";
+        insightDiv.innerHTML = `<div class="insight-title">📖 Complete Personalized Learning Analysis</div>${fullAnalysisHtml}`;
+        
+        const workshopDiv = document.getElementById('workshopSection');
+        workshopDiv.style.display = "block";
+        
+        // 重新绑定按钮事件
+        const workshopBtn = document.getElementById('workshopInterestBtn');
+        const newBtn = workshopBtn.cloneNode(true);
+        workshopBtn.parentNode.replaceChild(newBtn, workshopBtn);
+        
+        newBtn.addEventListener('click', async () => {
+    const freeTimeVal = document.getElementById('freeTimeSelect').value;
+    if (!freeTimeVal || freeTimeVal === "") {
+        alert("Please select your preferred time slot for the workshop.");
+        return;
+    }
+    const emailVal = document.getElementById('email').value.trim();
+    
+    const statusDiv = document.getElementById('workshopStatus');
+    statusDiv.style.display = "block";
+    statusDiv.innerHTML = "⏳ Saving your data to Google Sheets...";
+    statusDiv.style.background = "#eef3fa";
+    
+    try {
+        // 1. 保存到本地 IndexedDB
+        await saveRegistration(name, phone, emailVal, freeTimeVal, scores, primary.code, secondary.code, fullAnalysisHtml);
+        
+        // 2. 发送到 Google Sheets（这是之前缺失的关键调用！）
+        const sheetData = {
+            name: name,
+            phone: phone,
+            email: emailVal,
+            freeTime: freeTimeVal,
+            scores: { ce: scores.ce, ro: scores.ro, ac: scores.ac, ae: scores.ae },
+            primaryStyle: `${primary.fullData.fullName} (${primary.code})`,
+            secondaryStyle: `${secondary.fullData.fullName} (${secondary.code})`,
+            workshopInterest: "Yes - Registered"
+        };
+        
+        const googleSaved = await sendToGoogleSheets(sheetData);
+        
+        if (googleSaved) {
+            statusDiv.innerHTML = `✅ Thank you ${name}! Your data has been saved to Google Sheets. We'll contact you about the workshop (${freeTimeVal}).`;
+            statusDiv.style.background = "#e0f2e9";
+        } else {
+            statusDiv.innerHTML = `✅ Data saved locally! (Google Sheets connection issue, but we have your info.)`;
+            statusDiv.style.background = "#fff3cd";
+        }
+        
+        document.getElementById('saveStatus').style.display = "block";
+        document.getElementById('saveStatus').innerHTML = "Your learning profile and workshop interest have been recorded.";
+        document.getElementById('saveStatus').style.background = "#e9f4ea";
+        
+    } catch(e) {
+        statusDiv.innerHTML = `⚠️ Save error: ${e.message}`;
+        statusDiv.style.background = "#ffe6e5";
+    }
+});
+        
+        try {
+            await initDB();
+            await saveRegistration(name, phone, document.getElementById('email').value.trim(), "pending_selection", scores, primary.code, secondary.code, fullAnalysisHtml);
+            document.getElementById('saveStatus').style.display = "block";
+            document.getElementById('saveStatus').innerHTML = "✅ Test results saved. You can register interest above.";
+        } catch(e) { console.warn(e); }
+    }
+    
+    function resetAll() {
+        document.querySelectorAll('.points-input').forEach(inp => { inp.value = ''; inp.classList.remove('error-border'); });
+        document.getElementById('ceScore').innerText = '-';
+        document.getElementById('roScore').innerText = '-';
+        document.getElementById('acScore').innerText = '-';
+        document.getElementById('aeScore').innerText = '-';
+        document.getElementById('styleMessage').innerHTML = '✨ Complete & calculate your profile ✨';
+        document.getElementById('insightPanel').style.display = 'none';
+        document.getElementById('workshopSection').style.display = 'none';
+        document.getElementById('saveStatus').style.display = 'none';
+        document.getElementById('workshopStatus').style.display = 'none';
+    }
+    
+    window.addEventListener('DOMContentLoaded', () => {
+        buildTable();
+        initDB().catch(e=>console.warn);
+        document.getElementById('calcBtn').addEventListener('click', calculateAndShow);
+        document.getElementById('resetFormBtn').addEventListener('click', resetAll);
+    });
+</script>
+</body>
+</html>
