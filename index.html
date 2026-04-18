@@ -28,34 +28,6 @@
             overflow: hidden;
             padding: 24px 28px 40px;
         }
-        .visitor-counter {
-            background: linear-gradient(135deg, #1e4b6e, #2c7da0);
-            color: white;
-            border-radius: 40px;
-            padding: 8px 20px;
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-        .counter-number {
-            background: white;
-            color: #1e4b6e;
-            padding: 4px 14px;
-            border-radius: 30px;
-            font-weight: 800;
-            font-size: 1.2rem;
-            min-width: 60px;
-            text-align: center;
-        }
-        .header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-        }
         h1 {
             font-size: 1.9rem;
             font-weight: 600;
@@ -93,13 +65,30 @@
             margin-bottom: 6px;
             color: #1f5068;
         }
-        .field-group input {
+        .field-group input, .field-group select {
             width: 100%;
             padding: 12px 14px;
             border: 1px solid #cbdde6;
             border-radius: 20px;
             font-size: 1rem;
             background: white;
+        }
+        .workshop-panel {
+            background: linear-gradient(105deg, #eef2f7 0%, #ffffff 100%);
+            border-radius: 24px;
+            padding: 18px 24px;
+            margin-bottom: 32px;
+            border: 1px solid #cde3ef;
+        }
+        .workshop-panel h3 {
+            margin: 0 0 12px 0;
+            color: #1e4b6e;
+            font-size: 1.1rem;
+        }
+        .workshop-panel p {
+            margin: 0 0 15px 0;
+            font-size: 0.9rem;
+            color: #4b6a7c;
         }
         .test-grid {
             overflow-x: auto;
@@ -136,16 +125,15 @@
             display: block;
             margin-top: 8px;
         }
-        /* 修改：下拉选择框样式 */
         .points-select {
-            width: 85px;
+            width: 100px;
             padding: 8px 6px;
             text-align: center;
             font-weight: 500;
             border: 1px solid #b9d0dd;
             border-radius: 28px;
             background: #ffffff;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             cursor: pointer;
         }
         .points-select:focus {
@@ -165,12 +153,6 @@
             font-size: 0.85rem;
             color: #7a6300;
             border-left: 5px solid #ffcd7e;
-        }
-        .instruction-note kbd {
-            background: #f0f0f0;
-            padding: 2px 8px;
-            border-radius: 6px;
-            font-family: monospace;
         }
         .score-cards {
             display: flex;
@@ -222,23 +204,6 @@
             padding: 12px 0;
             border-bottom: 1px solid #e2edf5;
         }
-        .workshop-card {
-            background: linear-gradient(105deg, #eef2f7 0%, #ffffff 100%);
-            border-radius: 32px;
-            padding: 22px 28px;
-            margin-top: 28px;
-            border: 1px solid #cde3ef;
-        }
-        .time-selector-group {
-            margin: 20px 0 15px;
-        }
-        .time-selector-group select {
-            width: 100%;
-            max-width: 350px;
-            padding: 12px 16px;
-            border-radius: 28px;
-            border: 1px solid #b9d0dd;
-        }
         .btn-group {
             display: flex;
             gap: 18px;
@@ -258,7 +223,6 @@
         }
         button:hover { background: #1f5e7e; }
         .reset-btn { background: #5f8da0; }
-        .workshop-btn { background: #2c6e4f; }
         .status-msg {
             background: #e9f4ea;
             color: #2e6b3e;
@@ -277,35 +241,93 @@
         }
         @media (max-width: 680px) {
             .container { padding: 16px; }
-            .points-select { width: 65px; font-size: 0.8rem; }
+            .points-select { width: 80px; font-size: 0.75rem; }
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <div style="display: flex; justify-content: flex-end;">
-        <div class="visitor-counter">
-            <span>👁️ Website Visits</span>
-            <span class="counter-number" id="visitCounter">0</span>
-        </div>
-    </div>
-    <div class="header-row"><h1>📘 Kolb Learning Style Inventory</h1></div>
+    <h1>📘 Kolb Learning Style Inventory</h1>
     <div class="sub">Discover your dominant learning styles (CE·RO·AC·AE) + personalized strategies</div>
 
+    <!-- 个人信息区域 -->
     <div class="info-panel">
-        <div class="field-group"><label>👤 Full Name *</label><input type="text" id="fullName" placeholder="e.g., Emma Johnson"></div>
-        <div class="field-group"><label>📞 Phone Number *</label><input type="tel" id="phone" placeholder="Mobile / WhatsApp"></div>
-        <div class="field-group"><label>📧 Email (optional)</label><input type="email" id="email" placeholder="name@example.com"></div>
+        <div class="field-group">
+            <label>👤 Full Name *</label>
+            <input type="text" id="fullName" placeholder="e.g., Emma Johnson">
+        </div>
+        <div class="field-group">
+            <label>📞 Phone Number *</label>
+            <input type="tel" id="phone" placeholder="Mobile / WhatsApp">
+        </div>
+        <div class="field-group">
+            <label>📧 Email (optional)</label>
+            <input type="email" id="email" placeholder="name@example.com">
+        </div>
+    </div>
+
+    <!-- 工作坊邀请和时间选择（移到个人信息下方，必须填写才能计算） -->
+    <div class="workshop-panel">
+        <h3>📢 Workshop on "Practical Learning Techniques"</h3>
+        <p>Based on your learning style results, we will design hands-on sessions: real-world case studies, reflective discussions, or experimental labs. Please select your preferred time slot below to continue.</p>
+        <div class="field-group" style="margin-top: 10px;">
+            <label>🗓️ Best available time for the workshop *</label>
+            <select id="freeTimeSelect">
+                <option value="" disabled selected>-- Select your preferred time slot --</option>
+                <optgroup label="Monday">
+                    <option value="Monday morning (9:00-12:00)">Monday morning (9:00-12:00)</option>
+                    <option value="Monday afternoon (14:00-17:00)">Monday afternoon (14:00-17:00)</option>
+                    <option value="Monday evening (18:00-21:00)">Monday evening (18:00-21:00)</option>
+                </optgroup>
+                <optgroup label="Tuesday">
+                    <option value="Tuesday morning (9:00-12:00)">Tuesday morning (9:00-12:00)</option>
+                    <option value="Tuesday afternoon (14:00-17:00)">Tuesday afternoon (14:00-17:00)</option>
+                    <option value="Tuesday evening (18:00-21:00)">Tuesday evening (18:00-21:00)</option>
+                </optgroup>
+                <optgroup label="Wednesday">
+                    <option value="Wednesday morning (9:00-12:00)">Wednesday morning (9:00-12:00)</option>
+                    <option value="Wednesday afternoon (14:00-17:00)">Wednesday afternoon (14:00-17:00)</option>
+                    <option value="Wednesday evening (18:00-21:00)">Wednesday evening (18:00-21:00)</option>
+                </optgroup>
+                <optgroup label="Thursday">
+                    <option value="Thursday morning (9:00-12:00)">Thursday morning (9:00-12:00)</option>
+                    <option value="Thursday afternoon (14:00-17:00)">Thursday afternoon (14:00-17:00)</option>
+                    <option value="Thursday evening (18:00-21:00)">Thursday evening (18:00-21:00)</option>
+                </optgroup>
+                <optgroup label="Friday">
+                    <option value="Friday morning (9:00-12:00)">Friday morning (9:00-12:00)</option>
+                    <option value="Friday afternoon (14:00-17:00)">Friday afternoon (14:00-17:00)</option>
+                    <option value="Friday evening (18:00-21:00)">Friday evening (18:00-21:00)</option>
+                </optgroup>
+                <optgroup label="Weekend">
+                    <option value="Saturday morning (10:00-13:00)">Saturday morning (10:00-13:00)</option>
+                    <option value="Saturday afternoon (14:00-17:00)">Saturday afternoon (14:00-17:00)</option>
+                    <option value="Sunday morning (10:00-13:00)">Sunday morning (10:00-13:00)</option>
+                    <option value="Sunday afternoon (14:00-17:00)">Sunday afternoon (14:00-17:00)</option>
+                </optgroup>
+                <option value="Flexible (any time works for me)">Flexible (any time works for me)</option>
+            </select>
+        </div>
     </div>
 
     <div class="instruction-note">
         ✏️ <strong>Scoring Rules:</strong> In each row, assign <strong>4, 3, 2, 1</strong> to the four options — each number exactly once.<br>
-        4 = Most like you | 1 = Least like you &nbsp;&nbsp;|&nbsp;&nbsp; 💡 The dropdown will automatically prevent duplicate numbers in the same row
+        4 = Most like you | 1 = Least like you &nbsp;&nbsp;|&nbsp;&nbsp; 💡 Once you select a number, it will be disabled in other dropdowns in the same row
     </div>
 
-    <div class="test-grid"><table id="testTable"><thead><tr><th>#</th><th>🎯 Concrete Experience (CE)</th><th>🧠 Reflective Observation (RO)</th><th>📐 Abstract Conceptualization (AC)</th><th>⚡ Active Experimentation (AE)</th></tr></thead><tbody id="tableBody"></tbody></table></div>
+    <div class="test-grid">
+        <table id="testTable">
+            <thead>
+                <tr><th>#</th><th>🎯 Concrete Experience (CE)</th><th>🧠 Reflective Observation (RO)</th><th>📐 Abstract Conceptualization (AC)</th><th>⚡ Active Experimentation (AE)</th></tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
 
-    <div class="btn-group"><button id="calcBtn">📊 Calculate & Show Full Analysis</button><button id="resetFormBtn" class="reset-btn">⟳ Reset All Items</button></div>
+    <div class="btn-group">
+        <button id="calcBtn">📊 Calculate & Show Full Analysis</button>
+        <button id="resetFormBtn" class="reset-btn">⟳ Reset All Items</button>
+    </div>
 
     <div id="resultArea">
         <div class="score-cards">
@@ -314,27 +336,8 @@
             <div class="score-card"><div class="score-label">AC</div><div class="score-value" id="acScore">-</div></div>
             <div class="score-card"><div class="score-label">AE</div><div class="score-value" id="aeScore">-</div></div>
         </div>
-        <div id="styleMessage" class="learning-style" style="background:#2c7da0;">✨ Complete & calculate your profile ✨</div>
+        <div id="styleMessage" class="learning-style" style="background:#2c7da0;">✨ Complete the test and click calculate ✨</div>
         <div id="insightPanel" class="insight-box" style="display:none;"></div>
-        <div id="workshopSection" class="workshop-card" style="display:none;">
-            <h3>📢 Interested in a Workshop on "Practical Learning Techniques"?</h3>
-            <p>Based on your unique style combination, we will design hands-on sessions. Leave your availability below.</p>
-            <div class="time-selector-group">
-                <label>🗓️ Best available time for the workshop?</label>
-                <select id="freeTimeSelect">
-                    <option value="" disabled selected>-- Select your preferred time slot --</option>
-                    <optgroup label="Monday"><option>Monday morning (9:00-12:00)</option><option>Monday afternoon (14:00-17:00)</option><option>Monday evening (18:00-21:00)</option></optgroup>
-                    <optgroup label="Tuesday"><option>Tuesday morning (9:00-12:00)</option><option>Tuesday afternoon (14:00-17:00)</option><option>Tuesday evening (18:00-21:00)</option></optgroup>
-                    <optgroup label="Wednesday"><option>Wednesday morning (9:00-12:00)</option><option>Wednesday afternoon (14:00-17:00)</option><option>Wednesday evening (18:00-21:00)</option></optgroup>
-                    <optgroup label="Thursday"><option>Thursday morning (9:00-12:00)</option><option>Thursday afternoon (14:00-17:00)</option><option>Thursday evening (18:00-21:00)</option></optgroup>
-                    <optgroup label="Friday"><option>Friday morning (9:00-12:00)</option><option>Friday afternoon (14:00-17:00)</option><option>Friday evening (18:00-21:00)</option></optgroup>
-                    <optgroup label="Weekend"><option>Saturday morning (10:00-13:00)</option><option>Saturday afternoon (14:00-17:00)</option><option>Sunday morning (10:00-13:00)</option><option>Sunday afternoon (14:00-17:00)</option></optgroup>
-                    <option>Flexible (any time works for me)</option>
-                </select>
-            </div>
-            <button id="workshopInterestBtn" class="workshop-btn">✉️ Register Interest & Save My Data</button>
-            <div id="workshopStatus" class="status-msg" style="display:none;"></div>
-        </div>
         <div id="saveStatus" class="status-msg" style="display:none;"></div>
     </div>
     <footer>🔍 Your data will be saved to Google Sheets. Each row must have unique numbers 1-4.</footer>
@@ -366,70 +369,36 @@
         AE: { fullName: "Active Experimentation Type", techniques: "✅ Learning by doing<br>✅ Trial and error<br>✅ Case studies", challenges: "⚠️ Struggles with purely theoretical subjects<br>⚠️ Impatient with observation-only", actionSteps: "🎯 Seize action opportunities<br>🎯 Impose real-world meaning on theory" }
     };
 
-    // ========== 修改：生成下拉选项的 HTML ==========
-    function createSelectOptions(rowIdx, colIdx, currentValue) {
-        const options = ['', '1 - Least like me', '2', '3', '4 - Most like me'];
-        let html = `<select class="points-select" data-row="${rowIdx}" data-col="${colIdx}" data-value="${currentValue || ''}">`;
+    // 生成下拉框 HTML
+    function createSelect(rowIdx, colIdx, currentValue) {
+        let html = `<select class="points-select" data-row="${rowIdx}" data-col="${colIdx}">`;
         html += `<option value="">-- Select --</option>`;
-        html += `<option value="1" ${currentValue == 1 ? 'selected' : ''}>1 - Least like me</option>`;
-        html += `<option value="2" ${currentValue == 2 ? 'selected' : ''}>2</option>`;
-        html += `<option value="3" ${currentValue == 3 ? 'selected' : ''}>3</option>`;
         html += `<option value="4" ${currentValue == 4 ? 'selected' : ''}>4 - Most like me</option>`;
+        html += `<option value="3" ${currentValue == 3 ? 'selected' : ''}>3</option>`;
+        html += `<option value="2" ${currentValue == 2 ? 'selected' : ''}>2</option>`;
+        html += `<option value="1" ${currentValue == 1 ? 'selected' : ''}>1 - Least like me</option>`;
         html += `</select>`;
         return html;
     }
 
-    // ========== 修改：检查同一行是否有重复数字 ==========
-    function validateRowForDuplicates(rowIdx) {
+    // 更新同一行中其他下拉框的可用选项
+    function updateRowOptions(rowIdx) {
         const selects = document.querySelectorAll(`.points-select[data-row='${rowIdx}']`);
-        const values = [];
-        selects.forEach(select => {
-            const val = select.value;
-            if (val && val !== "") {
-                values.push(parseInt(val));
-            }
-        });
-        
-        // 检查是否有重复（非空值中）
-        const hasDuplicates = values.length !== new Set(values).size;
-        
-        selects.forEach(select => {
-            if (hasDuplicates && select.value !== "") {
-                select.classList.add('error-border');
-            } else {
-                select.classList.remove('error-border');
-            }
-        });
-        
-        return !hasDuplicates;
-    }
-
-    // ========== 修改：更新下拉选项的可用性（当选择一个数字后，同一行其他选项不能再选该数字）==========
-    function updateSelectOptions(rowIdx) {
-        const selects = document.querySelectorAll(`.points-select[data-row='${rowIdx}']`);
-        // 收集当前行所有已选中的值
         const selectedValues = [];
         selects.forEach(select => {
             const val = select.value;
             if (val && val !== "") {
-                selectedValues.push(parseInt(val));
+                selectedValues.push(val);
             }
         });
         
-        // 更新每个下拉框的选项
         selects.forEach(select => {
             const currentVal = select.value;
-            // 保存当前选中的值
             const options = select.querySelectorAll('option');
             options.forEach(option => {
                 const optionVal = option.value;
-                if (optionVal === "") {
-                    // 空选项始终可用
-                    return;
-                }
-                const numVal = parseInt(optionVal);
-                // 如果这个数字已经被同行的其他选择框选中了，且不是当前选择框自己，则禁用该选项
-                if (selectedValues.includes(numVal) && currentVal !== optionVal) {
+                if (optionVal === "") return;
+                if (selectedValues.includes(optionVal) && currentVal !== optionVal) {
                     option.disabled = true;
                 } else {
                     option.disabled = false;
@@ -438,221 +407,157 @@
         });
     }
 
-    // ========== 修改：处理下拉框变化事件 ==========
-    function handleSelectChange(e) {
-        const select = e.target;
-        const rowIdx = parseInt(select.getAttribute('data-row'));
+    // 验证某一行是否完整且无重复
+    function validateRow(rowIdx) {
+        const selects = document.querySelectorAll(`.points-select[data-row='${rowIdx}']`);
+        let values = [];
+        let hasEmpty = false;
         
-        // 先验证当前行是否有重复
-        validateRowForDuplicates(rowIdx);
-        
-        // 更新所有选项的可用性
-        updateSelectOptions(rowIdx);
-        
-        // 再次验证
-        validateRowForDuplicates(rowIdx);
-        
-        // Enter 键跳转逻辑：跳转到下一个下拉框
-        const allSelects = getAllSelects();
-        const currentIndex = allSelects.indexOf(select);
-        if (currentIndex !== -1 && currentIndex < allSelects.length - 1) {
-            const nextSelect = allSelects[currentIndex + 1];
-            nextSelect.focus();
-        }
-    }
-
-    // 获取所有下拉框（按顺序）
-    function getAllSelects() {
-        const selects = [];
-        // 个人信息输入框
-        const nameInput = document.getElementById('fullName');
-        const phoneInput = document.getElementById('phone');
-        const emailInput = document.getElementById('email');
-        if (nameInput) selects.push(nameInput);
-        if (phoneInput) selects.push(phoneInput);
-        if (emailInput) selects.push(emailInput);
-        
-        // 表格中的所有下拉框
-        const tableSelects = document.querySelectorAll('.points-select');
-        tableSelects.forEach(sel => selects.push(sel));
-        
-        return selects;
-    }
-
-    // 设置 Enter 键跳转
-    function setupEnterNavigation() {
-        const allInputs = getAllSelects();
-        allInputs.forEach((input, i) => {
-            input.setAttribute('data-input-index', i);
-            input.removeEventListener('keydown', handleEnterKey);
-            input.addEventListener('keydown', handleEnterKey);
-        });
-    }
-    
-    function handleEnterKey(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            const currentIndex = parseInt(this.getAttribute('data-input-index'));
-            const allInputs = getAllSelects();
-            if (currentIndex < allInputs.length - 1) {
-                const nextInput = allInputs[currentIndex + 1];
-                nextInput.focus();
-                if (nextInput.select) nextInput.select();
+        selects.forEach(select => {
+            const val = select.value;
+            if (!val || val === "") {
+                hasEmpty = true;
+                select.classList.add('error-border');
             } else {
-                document.getElementById('calcBtn').focus();
+                values.push(val);
+                select.classList.remove('error-border');
             }
-        }
-    }
-    
-    function refreshEnterNavigation() {
-        setTimeout(() => {
-            const allInputs = getAllSelects();
-            allInputs.forEach((input, i) => {
-                input.setAttribute('data-input-index', i);
-                input.removeEventListener('keydown', handleEnterKey);
-                input.addEventListener('keydown', handleEnterKey);
-            });
-        }, 50);
-    }
-
-    // ========== 修改：构建表格（使用下拉选择框代替数字输入框）==========
-    function buildTable() {
-        const tbody = document.getElementById('tableBody');
-        tbody.innerHTML = '';
-        for (let i = 0; i < rowsData.length; i++) {
-            const row = rowsData[i];
-            const tr = document.createElement('tr');
-            const tdLabel = document.createElement('td'); 
-            tdLabel.className = 'row-label'; 
-            tdLabel.innerText = (i+1).toString(); 
-            tr.appendChild(tdLabel);
-            
-            // 创建四个下拉框
-            const ceTd = document.createElement('td');
-            ceTd.innerHTML = createSelectOptions(i, 0, '');
-            const ceSpan = document.createElement('span'); 
-            ceSpan.className = 'question-text'; 
-            ceSpan.innerText = row.ce; 
-            ceTd.appendChild(ceSpan);
-            tr.appendChild(ceTd);
-            
-            const roTd = document.createElement('td');
-            roTd.innerHTML = createSelectOptions(i, 1, '');
-            const roSpan = document.createElement('span'); 
-            roSpan.className = 'question-text'; 
-            roSpan.innerText = row.ro; 
-            roTd.appendChild(roSpan);
-            tr.appendChild(roTd);
-            
-            const acTd = document.createElement('td');
-            acTd.innerHTML = createSelectOptions(i, 2, '');
-            const acSpan = document.createElement('span'); 
-            acSpan.className = 'question-text'; 
-            acSpan.innerText = row.ac; 
-            acTd.appendChild(acSpan);
-            tr.appendChild(acTd);
-            
-            const aeTd = document.createElement('td');
-            aeTd.innerHTML = createSelectOptions(i, 3, '');
-            const aeSpan = document.createElement('span'); 
-            aeSpan.className = 'question-text'; 
-            aeSpan.innerText = row.ae; 
-            aeTd.appendChild(aeSpan);
-            tr.appendChild(aeTd);
-            
-            tbody.appendChild(tr);
-        }
-        
-        // 绑定事件
-        const allSelects = document.querySelectorAll('.points-select');
-        allSelects.forEach(select => {
-            select.addEventListener('change', handleSelectChange);
         });
         
-        refreshEnterNavigation();
+        const hasDuplicate = values.length !== new Set(values).size;
+        if (hasDuplicate) {
+            selects.forEach(select => {
+                if (select.value !== "") select.classList.add('error-border');
+            });
+        }
+        
+        return !hasEmpty && !hasDuplicate;
     }
 
-    // ========== 修改：验证所有行是否填写完整且无重复 ==========
+    // 验证所有行
     function allRowsValid() {
         let allValid = true;
         for (let i = 0; i < rowsData.length; i++) {
-            const selects = document.querySelectorAll(`.points-select[data-row='${i}']`);
-            let values = [];
-            let hasEmpty = false;
-            
-            selects.forEach(select => {
-                const val = select.value;
-                if (!val || val === "") {
-                    hasEmpty = true;
-                    select.classList.add('error-border');
-                } else {
-                    values.push(parseInt(val));
-                    select.classList.remove('error-border');
-                }
-            });
-            
-            // 检查是否有重复
-            const hasDuplicates = values.length !== new Set(values).length;
-            if (hasDuplicates) {
-                allValid = false;
-                selects.forEach(select => {
-                    if (select.value !== "") select.classList.add('error-border');
-                });
-            }
-            
-            if (hasEmpty || hasDuplicates) {
-                allValid = false;
-            }
+            if (!validateRow(i)) allValid = false;
         }
         return allValid;
     }
 
-    // ========== 修改：获取矩阵值 ==========
+    // 获取矩阵值
     function getMatrix() {
         const m = Array(rowsData.length).fill().map(() => [0, 0, 0, 0]);
         for (let i = 0; i < rowsData.length; i++) {
             for (let c = 0; c < 4; c++) {
                 const select = document.querySelector(`.points-select[data-row='${i}'][data-col='${c}']`);
                 if (select && select.value) {
-                    m[i][c] = parseInt(select.value) || 0;
+                    m[i][c] = parseInt(select.value);
                 }
             }
         }
         return m;
     }
 
-    function computeScores(matrix) { 
-        let ce = 0, ro = 0, ac = 0, ae = 0; 
-        [1,2,3,4,6,7].forEach(r => { if(matrix[r]) ce += matrix[r][0]; }); 
-        [0,2,5,6,7,8].forEach(r => { if(matrix[r]) ro += matrix[r][1]; }); 
-        [1,2,3,4,7,8].forEach(r => { if(matrix[r]) ac += matrix[r][2]; }); 
-        [0,2,5,6,7,8].forEach(r => { if(matrix[r]) ae += matrix[r][3]; }); 
-        return {ce, ro, ac, ae}; 
+    // 下拉框变化事件处理
+    function handleSelectChange(e) {
+        const select = e.target;
+        const rowIdx = parseInt(select.getAttribute('data-row'));
+        updateRowOptions(rowIdx);
+        validateRow(rowIdx);
+        
+        // 自动跳转到下一个下拉框
+        const allSelects = document.querySelectorAll('.points-select');
+        const currentIndex = Array.from(allSelects).indexOf(select);
+        if (currentIndex !== -1 && currentIndex < allSelects.length - 1) {
+            allSelects[currentIndex + 1].focus();
+        }
+    }
+
+    // 构建表格
+    function buildTable() {
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = '';
+        for (let i = 0; i < rowsData.length; i++) {
+            const row = rowsData[i];
+            const tr = document.createElement('tr');
+            
+            const tdLabel = document.createElement('td');
+            tdLabel.className = 'row-label';
+            tdLabel.innerText = (i + 1).toString();
+            tr.appendChild(tdLabel);
+            
+            // CE 列
+            const ceTd = document.createElement('td');
+            ceTd.innerHTML = createSelect(i, 0, '');
+            const ceSpan = document.createElement('span');
+            ceSpan.className = 'question-text';
+            ceSpan.innerText = row.ce;
+            ceTd.appendChild(ceSpan);
+            tr.appendChild(ceTd);
+            
+            // RO 列
+            const roTd = document.createElement('td');
+            roTd.innerHTML = createSelect(i, 1, '');
+            const roSpan = document.createElement('span');
+            roSpan.className = 'question-text';
+            roSpan.innerText = row.ro;
+            roTd.appendChild(roSpan);
+            tr.appendChild(roTd);
+            
+            // AC 列
+            const acTd = document.createElement('td');
+            acTd.innerHTML = createSelect(i, 2, '');
+            const acSpan = document.createElement('span');
+            acSpan.className = 'question-text';
+            acSpan.innerText = row.ac;
+            acTd.appendChild(acSpan);
+            tr.appendChild(acTd);
+            
+            // AE 列
+            const aeTd = document.createElement('td');
+            aeTd.innerHTML = createSelect(i, 3, '');
+            const aeSpan = document.createElement('span');
+            aeSpan.className = 'question-text';
+            aeSpan.innerText = row.ae;
+            aeTd.appendChild(aeSpan);
+            tr.appendChild(aeTd);
+            
+            tbody.appendChild(tr);
+        }
+        
+        document.querySelectorAll('.points-select').forEach(select => {
+            select.addEventListener('change', handleSelectChange);
+        });
+    }
+
+    // 计算分数
+    function computeScores(matrix) {
+        let ce = 0, ro = 0, ac = 0, ae = 0;
+        [1,2,3,4,6,7].forEach(r => { if(matrix[r]) ce += matrix[r][0]; });
+        [0,2,5,6,7,8].forEach(r => { if(matrix[r]) ro += matrix[r][1]; });
+        [1,2,3,4,7,8].forEach(r => { if(matrix[r]) ac += matrix[r][2]; });
+        [0,2,5,6,7,8].forEach(r => { if(matrix[r]) ae += matrix[r][3]; });
+        return {ce, ro, ac, ae};
     }
     
-    function getTopTwoStyles(scores) { 
+    function getTopTwoStyles(scores) {
         const map = [
             {code:"CE", value:scores.ce, fullData:fullStyleLibrary.CE},
             {code:"RO", value:scores.ro, fullData:fullStyleLibrary.RO},
             {code:"AC", value:scores.ac, fullData:fullStyleLibrary.AC},
             {code:"AE", value:scores.ae, fullData:fullStyleLibrary.AE}
-        ]; 
-        map.sort((a,b)=>b.value - a.value); 
-        return [map[0], map[1]]; 
+        ];
+        map.sort((a,b)=>b.value - a.value);
+        return [map[0], map[1]];
     }
     
-    function generateFullAnalysis(primary, secondary) { 
-        return `<div class="insight-section"><h4>🎓 Primary: ${primary.fullData.fullName} (${primary.code})</h4><p><strong>📌 Techniques:</strong><br>${primary.fullData.techniques}</p><p><strong>⚠️ Challenges:</strong><br>${primary.fullData.challenges}</p><p><strong>🚀 Action Steps:</strong><br>${primary.fullData.actionSteps}</p></div><div class="insight-section"><h4>✨ Secondary: ${secondary.fullData.fullName} (${secondary.code})</h4><p><strong>📌 Techniques:</strong><br>${secondary.fullData.techniques}</p><p><strong>⚠️ Challenges:</strong><br>${secondary.fullData.challenges}</p><p><strong>🚀 Action Steps:</strong><br>${secondary.fullData.actionSteps}</p></div>`; 
+    function generateFullAnalysis(primary, secondary) {
+        return `<div class="insight-section"><h4>🎓 Primary: ${primary.fullData.fullName} (${primary.code})</h4><p><strong>📌 Techniques:</strong><br>${primary.fullData.techniques}</p><p><strong>⚠️ Challenges:</strong><br>${primary.fullData.challenges}</p><p><strong>🚀 Action Steps:</strong><br>${primary.fullData.actionSteps}</p></div><div class="insight-section"><h4>✨ Secondary: ${secondary.fullData.fullName} (${secondary.code})</h4><p><strong>📌 Techniques:</strong><br>${secondary.fullData.techniques}</p><p><strong>⚠️ Challenges:</strong><br>${secondary.fullData.challenges}</p><p><strong>🚀 Action Steps:</strong><br>${secondary.fullData.actionSteps}</p></div>`;
     }
 
-    // 发送数据到 Google Sheets
+    // 发送到 Google Sheets
     async function sendToGoogleSheets(data) {
-        if (typeof GOOGLE_SCRIPT_URL === 'undefined' || !GOOGLE_SCRIPT_URL) {
-            console.warn('GOOGLE_SCRIPT_URL is not defined');
-            return false;
-        }
-        if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
-            console.warn('Please replace GOOGLE_SCRIPT_URL with your actual Google Apps Script URL');
+        if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
+            console.warn('Google Sheets URL not configured');
             return false;
         }
         try {
@@ -664,7 +569,7 @@
             });
             return true;
         } catch (error) {
-            console.error('Error sending to Google Sheets:', error);
+            console.error('Error:', error);
             return false;
         }
     }
@@ -685,51 +590,29 @@
         });
     }
 
-    async function saveRegistration(name, phone, email, freeTime, scores, primaryCode, secondaryCode, fullAnalysisHtml, workshopInterest = false) {
-        if (!db) await initDB();
-        const tx = db.transaction(["workshopRegistrations"], "readwrite");
-        const store = tx.objectStore("workshopRegistrations");
-        const record = {
-            name: name.trim(),
-            phone: phone.trim(),
-            email: email.trim() || "",
-            availableTime: freeTime,
-            ce: scores.ce, ro: scores.ro, ac: scores.ac, ae: scores.ae,
-            primaryStyle: primaryCode,
-            secondaryStyle: secondaryCode,
-            insightSummary: fullAnalysisHtml.substring(0, 500),
-            workshopInterest: workshopInterest,
-            timestamp: new Date().toISOString()
-        };
-        return new Promise((resolve, reject) => {
-            const req = store.add(record);
-            req.onsuccess = () => resolve(true);
-            req.onerror = (err) => reject(err);
-        });
-    }
-
-    async function saveToCloud(name, phone, email, freeTime, scores, primaryStyleName, secondaryStyleName, workshopStatus) {
+    async function saveToCloud(name, phone, email, freeTime, scores, primaryStyleName, secondaryStyleName) {
         const sheetData = {
-            name: name,
-            phone: phone,
-            email: email,
-            freeTime: freeTime,
+            name: name, phone: phone, email: email, freeTime: freeTime,
             scores: { ce: scores.ce, ro: scores.ro, ac: scores.ac, ae: scores.ae },
-            primaryStyle: primaryStyleName,
-            secondaryStyle: secondaryStyleName,
-            workshopInterest: workshopStatus
+            primaryStyle: primaryStyleName, secondaryStyle: secondaryStyleName,
+            workshopInterest: "Yes - Registered"
         };
         return await sendToGoogleSheets(sheetData);
     }
 
+    // 主要计算函数
     async function calculateAndShow() {
         const name = document.getElementById('fullName').value.trim();
         const phone = document.getElementById('phone').value.trim();
+        const freeTime = document.getElementById('freeTimeSelect').value;
+        
+        // 验证必填项
         if (!name) { alert("Please enter your name."); return; }
         if (!phone) { alert("Phone number is required."); return; }
-        if (!allRowsValid()) { 
-            alert("Please complete all rows: each row must have exactly one 4, one 3, one 2, and one 1. Empty or duplicate selections are not allowed.");
-            return; 
+        if (!freeTime || freeTime === "") { alert("Please select your preferred time slot for the workshop."); return; }
+        if (!allRowsValid()) {
+            alert("Please complete all rows: each row must have exactly one 4, one 3, one 2, and one 1. No empty or duplicate selections.");
+            return;
         }
 
         const matrix = getMatrix();
@@ -738,6 +621,7 @@
         const primary = topTwo[0], secondary = topTwo[1];
         const fullAnalysisHtml = generateFullAnalysis(primary, secondary);
 
+        // 显示结果
         document.getElementById('ceScore').innerText = scores.ce;
         document.getElementById('roScore').innerText = scores.ro;
         document.getElementById('acScore').innerText = scores.ac;
@@ -745,18 +629,58 @@
         document.getElementById('styleMessage').innerHTML = `🧠 Your dominant styles: ${primary.fullData.fullName} (${primary.code}) + ${secondary.fullData.fullName} (${secondary.code})`;
         document.getElementById('insightPanel').style.display = "block";
         document.getElementById('insightPanel').innerHTML = `<div class="insight-title">📖 Complete Personalized Learning Analysis</div>${fullAnalysisHtml}`;
-        document.getElementById('workshopSection').style.display = "block";
 
+        // 保存数据
         const emailVal = document.getElementById('email').value.trim();
-        
         const saveStatusDiv = document.getElementById('saveStatus');
         saveStatusDiv.style.display = "block";
         saveStatusDiv.innerHTML = "⏳ Saving your data...";
-        saveStatusDiv.style.background = "#eef3fa";
         
         try {
-            await saveRegistration(name, phone, emailVal, "Not specified yet", scores, primary.code, secondary.code, fullAnalysisHtml, false);
-            
             const primaryStyleName = `${primary.fullData.fullName} (${primary.code})`;
             const secondaryStyleName = `${secondary.fullData.fullName} (${secondary.code})`;
-            const cloudSaved = await saveToCloud(name
+            const cloudSaved = await saveToCloud(name, phone, emailVal, freeTime, scores, primaryStyleName, secondaryStyleName);
+            
+            if (cloudSaved) {
+                saveStatusDiv.innerHTML = "✅ Your test results and workshop registration have been saved to Google Sheets! Thank you.";
+                saveStatusDiv.style.background = "#e0f2e9";
+            } else {
+                saveStatusDiv.innerHTML = "⚠️ Data saved locally only. (Google Sheets connection issue)";
+                saveStatusDiv.style.background = "#fff3cd";
+            }
+        } catch(e) {
+            saveStatusDiv.innerHTML = "⚠️ Data saved locally only. Please check your connection.";
+            saveStatusDiv.style.background = "#ffe6e5";
+        }
+    }
+
+    function resetAll() {
+        document.querySelectorAll('.points-select').forEach(select => {
+            select.value = '';
+            select.classList.remove('error-border');
+        });
+        document.querySelectorAll('.points-select option').forEach(opt => opt.disabled = false);
+        document.getElementById('fullName').value = '';
+        document.getElementById('phone').value = '';
+        document.getElementById('email').value = '';
+        document.getElementById('freeTimeSelect').value = '';
+        document.getElementById('ceScore').innerText = '-';
+        document.getElementById('roScore').innerText = '-';
+        document.getElementById('acScore').innerText = '-';
+        document.getElementById('aeScore').innerText = '-';
+        document.getElementById('styleMessage').innerHTML = '✨ Complete the test and click calculate ✨';
+        document.getElementById('insightPanel').style.display = 'none';
+        document.getElementById('saveStatus').style.display = 'none';
+        document.getElementById('fullName').focus();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        buildTable();
+        initDB().catch(e=>console.warn);
+        document.getElementById('calcBtn').addEventListener('click', calculateAndShow);
+        document.getElementById('resetFormBtn').addEventListener('click', resetAll);
+        document.getElementById('fullName').focus();
+    });
+</script>
+</body>
+</html>
