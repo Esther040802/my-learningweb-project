@@ -239,10 +239,169 @@
             padding-top: 18px;
             border-top: 1px solid #e2edf5;
         }
+                /* ========== 分享弹窗样式 ========== */
+        .share-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .share-modal.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .share-modal-content {
+            background: white;
+            border-radius: 32px;
+            max-width: 90vw;
+            width: 400px;
+            padding: 24px;
+            text-align: center;
+            animation: fadeInUp 0.4s ease;
+        }
+
+        .share-image-preview {
+            width: 100%;
+            border-radius: 20px;
+            margin: 15px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .share-icon-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 40px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            color: white;
+            text-decoration: none;
+        }
+
+        .share-icon-btn:hover { transform: translateY(-2px); }
+
+        .btn-instagram { background: linear-gradient(45deg, #f09433, #d62976, #962fbf); }
+        .btn-twitter { background: #1DA1F2; }
+        .btn-facebook { background: #1877F2; }
+        .btn-whatsapp { background: #25D366; }
+        .btn-download { background: #2c7da0; }
+        .btn-close { background: #e74c3c; }
+
+        .share-tip {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: 15px;
+            padding-top: 12px;
+            border-top: 1px solid #eee;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 结果区域的分享按钮 */
+        .share-result-btn {
+            background: linear-gradient(135deg, #f09433, #d62976, #962fbf);
+            margin-top: 20px;
+            width: 100%;
+            padding: 14px;
+            font-size: 1rem;
+        }
         @media (max-width: 680px) {
             .container { padding: 16px; }
             .points-select { width: 80px; font-size: 0.75rem; }
         }
+
+                /* ========== 结果图卡样式 ========== */
+        .result-card-container {
+            margin: 25px 0 20px;
+            text-align: center;
+        }
+
+        .result-card-image {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 28px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            margin-bottom: 15px;
+        }
+
+        .card-share-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .card-share-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 40px;
+            border: none;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            color: white;
+            text-decoration: none;
+        }
+
+        .card-share-btn:hover { transform: translateY(-2px); }
+
+        .card-share-btn.instagram { background: linear-gradient(45deg, #f09433, #d62976, #962fbf); }
+        .card-share-btn.twitter { background: #1DA1F2; }
+        .card-share-btn.facebook { background: #1877F2; }
+        .card-share-btn.whatsapp { background: #25D366; }
+        .card-share-btn.copy { background: #2c7da0; }
+
+        .share-native-btn {
+            background: #2c7da0;
+            margin-top: 10px;
+            width: 100%;
+            max-width: 300px;
+            padding: 12px;
+            font-size: 1rem;
+        }
+
+        .hint-text {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: 10px;
+        }
+        
     </style>
 </head>
 <body>
@@ -340,6 +499,28 @@
         <div id="insightPanel" class="insight-box" style="display:none;"></div>
         <div id="saveStatus" class="status-msg" style="display:none;"></div>
     </div>
+
+    <div id="shareModal" class="share-modal">
+        <div class="share-modal-content">
+            <h3 style="margin: 0 0 10px 0;">📸 分享你的学习风格</h3>
+            <p style="color: #666; margin-bottom: 10px;">点击下方按钮分享到社交网站</p>
+            <img id="sharePreviewImage" class="share-image-preview" src="" alt="分享卡片预览">
+            <div class="share-buttons">
+                <a id="shareInstagram" class="share-icon-btn btn-instagram" target="_blank">📸 Instagram</a>
+                <a id="shareTwitter" class="share-icon-btn btn-twitter" target="_blank">🐦 Twitter</a>
+                <a id="shareFacebook" class="share-icon-btn btn-facebook" target="_blank">📘 Facebook</a>
+                <a id="shareWhatsApp" class="share-icon-btn btn-whatsapp" target="_blank">💬 WhatsApp</a>
+            </div>
+            <div class="share-buttons">
+                <button id="downloadImageBtn" class="share-icon-btn btn-download">💾 保存图片</button>
+                <button id="closeShareModal" class="share-icon-btn btn-close">✕ 关闭</button>
+            </div>
+            <div class="share-tip">
+                💡 提示：点击 Instagram 后选择「创建故事」→ 从相册选择图片
+            </div>
+        </div>
+    </div>
+
     <footer>🔍 Your data will be saved to Google Sheets. Each row must have unique numbers 1-4.</footer>
 </div>
 
@@ -652,6 +833,9 @@
             saveStatusDiv.innerHTML = "⚠️ Data saved locally only. Please check your connection.";
             saveStatusDiv.style.background = "#ffe6e5";
         }
+        displayShareCard(primary.code);
+        // 添加分享按钮（传入主导风格的code）
+        addShareResultButton(primary.code);
     }
 
     function resetAll() {
@@ -672,6 +856,241 @@
         document.getElementById('insightPanel').style.display = 'none';
         document.getElementById('saveStatus').style.display = 'none';
         document.getElementById('fullName').focus();
+        const cardContainer = document.getElementById('resultCardContainer');
+        if (cardContainer) cardContainer.remove();
+        removeShareResultButton();
+    }
+    // ========== 分享卡片功能（4种基础风格）==========
+
+    // 卡片图片映射（根据主导风格选择对应的图片）
+    const shareCardImages = {
+        CE: '/card_CE.jpg',
+        RO: '/card_RO.jpg',
+        AC: '/card_AC.jpg',
+        AE: '/card_AE.jpg',
+    };
+
+    // 获取当前页面的分享图片URL
+    let currentShareImageUrl = '';
+
+    // 根据主导风格获取卡片图片URL
+    function getShareCardImage(primaryCode) {
+        return shareCardImages[primaryCode] || shareCardImages.CE;
+    }
+        // 显示图卡和分享按钮
+    function displayShareCard(primaryCode) {
+        const imageUrl = getShareCardImage(primaryCode);
+        const resultArea = document.getElementById('resultArea');
+        
+        // 检查是否已存在图卡容器，避免重复添加
+        let cardContainer = document.getElementById('resultCardContainer');
+        if (cardContainer) {
+            cardContainer.remove();
+        }
+        
+        // 创建图卡容器
+        cardContainer = document.createElement('div');
+        cardContainer.id = 'resultCardContainer';
+        cardContainer.className = 'result-card-container';
+        
+        // 添加图片
+        const img = document.createElement('img');
+        img.src = imageUrl;
+        img.alt = '你的学习风格图卡';
+        img.className = 'result-card-image';
+        cardContainer.appendChild(img);
+        
+        // 添加分享按钮行
+        const shareRow = document.createElement('div');
+        shareRow.className = 'card-share-buttons';
+        shareRow.innerHTML = `
+            <button class="card-share-btn instagram" data-platform="instagram">📸 Instagram</button>
+            <button class="card-share-btn twitter" data-platform="twitter">🐦 Twitter</button>
+            <button class="card-share-btn facebook" data-platform="facebook">📘 Facebook</button>
+            <button class="card-share-btn whatsapp" data-platform="whatsapp">💬 WhatsApp</button>
+            <button class="card-share-btn copy" data-platform="copy">🔗 复制链接</button>
+        `;
+        cardContainer.appendChild(shareRow);
+        
+        // 添加原生分享按钮（移动端直接调起分享）
+        if (navigator.share) {
+            const nativeShareBtn = document.createElement('button');
+            nativeShareBtn.className = 'card-share-btn share-native-btn';
+            nativeShareBtn.innerHTML = '📤 分享此页面';
+            nativeShareBtn.style.width = '100%';
+            nativeShareBtn.style.maxWidth = '300px';
+            nativeShareBtn.style.margin = '10px auto 0';
+            nativeShareBtn.onclick = () => nativeShare();
+            cardContainer.appendChild(nativeShareBtn);
+        }
+        
+        // 添加提示文字
+        const hint = document.createElement('div');
+        hint.className = 'hint-text';
+        hint.innerHTML = '💡 点击上方按钮可直接分享到社交平台';
+        cardContainer.appendChild(hint);
+        
+        resultArea.appendChild(cardContainer);
+        
+        // 绑定分享按钮事件
+        attachShareEvents(imageUrl);
+    }
+
+    // 绑定分享按钮事件
+    // 绑定按钮
+    function attachShareEvents(imageUrl) {
+        const quickShareBtn = document.querySelector('.card-share-btn.quick-share');
+        if (quickShareBtn) {
+            quickShareBtn.onclick = () => quickShare(imageUrl);
+        }
+    }
+    
+        // 分享图片到手机原生分享面板
+    async function quickShare(imageUrl) {
+    const pageUrl = window.location.href;
+    const pageTitle = '我的Kolb学习风格测试结果';
+    
+    try {
+        // 获取图片
+        const response = await fetch(imageUrl);
+        const blob = await response.blob();
+        const file = new File([blob], 'learning-style-card.png', { type: 'image/png' });
+        
+        // 检查是否支持分享图片
+        if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+            // ✅ 支持图片分享（HTTPS 环境）
+            await navigator.share({
+                title: pageTitle,
+                text: `快来看看我的学习风格测试结果！`,
+                files: [file],
+                url: pageUrl
+            });
+        } else {
+            // ❌ 不支持图片分享，下载图片并提示
+            const link = document.createElement('a');
+            link.download = 'learning-style-card.png';
+            link.href = imageUrl;
+            link.click();
+            alert('📸 图片已保存！请打开相册，手动分享这张图片到社交平台');
+        }
+    } catch (e) {
+        if (e.name !== 'AbortError') {
+            console.log('分享失败', e);
+            // 降级：下载图片
+            const link = document.createElement('a');
+            link.download = 'learning-style-card.png';
+            link.href = imageUrl;
+            link.click();
+            alert('📸 图片已保存！您可以在相册中分享给朋友');
+        }
+    }
+}
+
+    // 原生分享页面（移动端）
+    function nativeShare() {
+        if (navigator.share) {
+            navigator.share({
+                title: 'Kolb学习风格测试',
+                text: '快来测试你的学习风格！',
+                url: window.location.href
+            }).catch(e => console.log('分享取消或失败'));
+        } else {
+            alert('您的浏览器不支持原生分享功能，请使用上方的社交平台按钮分享');
+        }
+    }
+    // 打开分享弹窗
+    function openShareModal(primaryCode) {
+        const imageUrl = getShareCardImage(primaryCode);
+        currentShareImageUrl = imageUrl;
+        
+        // 预览图片
+        const previewImg = document.getElementById('sharePreviewImage');
+        if (previewImg) {
+            previewImg.src = imageUrl;
+        }
+        
+        // 显示弹窗
+        const modal = document.getElementById('shareModal');
+        if (modal) {
+            modal.classList.add('active');
+        }
+    }
+
+    // 下载分享图片
+    function downloadShareImage() {
+        if (!currentShareImageUrl) return;
+        
+        const fileName = currentShareImageUrl.split('/').pop() || 'learning-style-card.png';
+        
+        const link = document.createElement('a');
+        link.download = fileName;
+        link.href = currentShareImageUrl;
+        link.click();
+        
+        const statusDiv = document.getElementById('saveStatus');
+        if (statusDiv) {
+            statusDiv.style.display = 'block';
+            statusDiv.innerHTML = '✅ 图片已保存！快去社交媒体分享吧！';
+            statusDiv.style.background = "#e0f2e9";
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 3000);
+        }
+    }
+
+    // 关闭分享弹窗
+    function closeShareModal() {
+        const modal = document.getElementById('shareModal');
+        if (modal) {
+            modal.classList.remove('active');
+        }
+    }
+
+    // 在结果区域添加分享按钮
+    let shareButtonAdded = false;
+
+    function addShareResultButton(primaryCode) {
+        if (document.getElementById('shareResultBtn')) return;
+        if (shareButtonAdded) return;
+        
+        const resultArea = document.getElementById('resultArea');
+        if (!resultArea) return;
+        
+        const shareBtn = document.createElement('button');
+        shareBtn.id = 'shareResultBtn';
+        shareBtn.className = 'share-result-btn';
+        shareBtn.innerHTML = '📸 分享结果到社交网站';
+        shareBtn.onclick = () => openShareModal(primaryCode);
+        
+        resultArea.appendChild(shareBtn);
+        shareButtonAdded = true;
+    }
+
+    // 移除分享按钮
+    function removeShareResultButton() {
+        const btn = document.getElementById('shareResultBtn');
+        if (btn) btn.remove();
+        shareButtonAdded = false;
+    }
+
+    // 初始化分享弹窗事件监听
+    function initShareModalEvents() {
+        const downloadBtn = document.getElementById('downloadImageBtn');
+        if (downloadBtn) {
+            downloadBtn.addEventListener('click', downloadShareImage);
+        }
+        
+        const closeBtn = document.getElementById('closeShareModal');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeShareModal);
+        }
+        
+        const modal = document.getElementById('shareModal');
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeShareModal();
+            });
+        }
     }
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -680,6 +1099,9 @@
         document.getElementById('calcBtn').addEventListener('click', calculateAndShow);
         document.getElementById('resetFormBtn').addEventListener('click', resetAll);
         document.getElementById('fullName').focus();
+
+        // 新增：初始化分享弹窗事件
+        initShareModalEvents();
     });
 </script>
 </body>
