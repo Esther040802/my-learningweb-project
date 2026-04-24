@@ -1132,21 +1132,38 @@ function downloadShareImage() {
     }
     
     // 保存报告申请信息到 Google Sheets（可选）
-    async function saveReportRequestInfo(name, phone, email, school, studentId, grade, major, primaryCode, secondaryCode) {
+    // 保存报告申请信息到 Google Sheets
+    async function saveReportRequestInfo(name, phone, email, school, studentId, grade, major, primaryCode, secondaryCode, reportType) {
         if (!GOOGLE_SCRIPT_URL) return;
         
+        // 获取工作坊时间（从页面上获取）
+        const freeTime = document.getElementById('freeTimeSelect').value || 'Not specified';
+        
+        // 获取分数
+        const ceScore = document.getElementById('ceScore').innerText;
+        const roScore = document.getElementById('roScore').innerText;
+        const acScore = document.getElementById('acScore').innerText;
+        const aeScore = document.getElementById('aeScore').innerText;
+        
         const sheetData = {
-            type: 'report_request',
+            timestamp: new Date().toISOString(),
             name: name,
             phone: phone,
             email: email,
+            freeTime: freeTime,
+            ceScore: ceScore,
+            roScore: roScore,
+            acScore: acScore,
+            aeScore: aeScore,
+            primaryStyle: `${primaryCode}`,
+            secondaryStyle: `${secondaryCode}`,
+            workshopInterest: "Yes - Registered",
             school: school,
             studentId: studentId,
             grade: grade,
             major: major,
-            primaryStyle: primaryCode,
-            secondaryStyle: secondaryCode,
-            timestamp: new Date().toISOString()
+            reportType: reportType,
+            reportRequestTime: new Date().toISOString()
         };
         
         try {
@@ -1156,6 +1173,7 @@ function downloadShareImage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(sheetData)
             });
+            console.log('报告申请信息已保存');
         } catch(e) {
             console.log('保存报告申请信息失败', e);
         }
@@ -1189,12 +1207,20 @@ function downloadShareImage() {
             // 获取对应的 PDF 文件路径
             const pdfPath = getReportFile(primary.code, secondary.code);
             
+            // 确定报告类型
+            let reportType = 'Default';
+            const hasRO = (primary.code === 'RO' || secondary.code === 'RO');
+            const hasAC = (primary.code === 'AC' || secondary.code === 'AC');
+            if (hasRO && hasAC) {
+                reportType = 'RO_AC_Report';
+            }
+            
             // 显示加载状态
-            newBtn.innerHTML = '⏳ 准备下载中...';
+            newBtn.innerHTML = '⏳ Preparing download...';
             newBtn.disabled = true;
             
-            // 可选：保存申请信息到 Google Sheets
-            await saveReportRequestInfo(name, phone, email, school, studentId, grade, major, primary.code, secondary.code);
+            // 保存申请信息到 Google Sheets
+            await saveReportRequestInfo(name, phone, email, school, studentId, grade, major, primary.code, secondary.code, reportType);
             
             // 创建下载链接
             const link = document.createElement('a');
@@ -1205,14 +1231,14 @@ function downloadShareImage() {
             document.body.removeChild(link);
             
             // 恢复按钮状态
-            newBtn.innerHTML = '📥 下载详细报告 (PDF)';
+            newBtn.innerHTML = '📥 Download Detailed Report (PDF)';
             newBtn.disabled = false;
             
             // 显示成功提示
             const statusDiv = document.getElementById('saveStatus');
             if (statusDiv) {
                 statusDiv.style.display = 'block';
-                statusDiv.innerHTML = '✅ 报告下载已开始！请检查您的下载文件夹。';
+                statusDiv.innerHTML = '✅ Report download started! Please check your downloads folder.';
                 statusDiv.style.background = "#e0f2e9";
                 setTimeout(() => {
                     statusDiv.style.display = 'none';
