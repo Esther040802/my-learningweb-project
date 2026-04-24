@@ -896,26 +896,44 @@ function displayShareCard(primaryCode) {
         }
     }
     // 下载分享图片
-    function downloadShareImage() {
-        if (!currentShareImageUrl) return;
-        
-        const fileName = currentShareImageUrl.split('/').pop() || 'learning-style-card.png';
-        
-        const link = document.createElement('a');
-        link.download = fileName;
-        link.href = currentShareImageUrl;
-        link.click();
-        
-        const statusDiv = document.getElementById('saveStatus');
-        if (statusDiv) {
-            statusDiv.style.display = 'block';
-            statusDiv.innerHTML = '✅ 图片已保存！快去社交媒体分享吧！';
-            statusDiv.style.background = "#e0f2e9";
-            setTimeout(() => {
-                statusDiv.style.display = 'none';
-            }, 3000);
-        }
+function downloadShareImage() {
+    // 直接从页面上获取图片地址
+    const imgElement = document.querySelector('.result-card-image');
+    if (!imgElement) {
+        alert('找不到图片元素');
+        return;
     }
+    
+    const imageUrl = imgElement.src;
+    console.log('下载图片地址:', imageUrl);
+    
+    if (!imageUrl) {
+        alert('图片地址无效');
+        return;
+    }
+    
+    // 提取文件名
+    const fileName = imageUrl.split('/').pop() || 'learning-style-card.png';
+    
+    // 方法1：直接下载
+    const link = document.createElement('a');
+    link.download = fileName;
+    link.href = imageUrl;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // 显示提示
+    const statusDiv = document.getElementById('saveStatus');
+    if (statusDiv) {
+        statusDiv.style.display = 'block';
+        statusDiv.innerHTML = '✅ 图片已保存！';
+        statusDiv.style.background = "#e0f2e9";
+        setTimeout(() => {
+            statusDiv.style.display = 'none';
+        }, 3000);
+    }
+}
 
     // 关闭分享弹窗
     function closeShareModal() {
