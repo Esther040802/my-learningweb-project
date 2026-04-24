@@ -239,76 +239,6 @@
             padding-top: 18px;
             border-top: 1px solid #e2edf5;
         }
-                /* ========== 分享弹窗样式 ========== */
-        .share-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            visibility: hidden;
-            opacity: 0;
-            transition: all 0.3s ease;
-        }
-
-        .share-modal.active {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .share-modal-content {
-            background: white;
-            border-radius: 32px;
-            max-width: 90vw;
-            width: 400px;
-            padding: 24px;
-            text-align: center;
-            animation: fadeInUp 0.4s ease;
-        }
-
-        .share-image-preview {
-            width: 100%;
-            border-radius: 20px;
-            margin: 15px 0;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .share-buttons {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 20px;
-        }
-
-        .share-icon-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            border-radius: 40px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s;
-            color: white;
-            text-decoration: none;
-        }
-
-        .share-icon-btn:hover { transform: translateY(-2px); }
-
-        .btn-instagram { background: linear-gradient(45deg, #f09433, #d62976, #962fbf); }
-        .btn-twitter { background: #1DA1F2; }
-        .btn-facebook { background: #1877F2; }
-        .btn-whatsapp { background: #25D366; }
-        .btn-download { background: #2c7da0; }
-        .btn-close { background: #e74c3c; }
 
         .share-tip {
             font-size: 12px;
@@ -477,27 +407,6 @@
         <div id="styleMessage" class="learning-style" style="background:#2c7da0;">✨ Complete the test and click calculate ✨</div>
         <div id="insightPanel" class="insight-box" style="display:none;"></div>
         <div id="saveStatus" class="status-msg" style="display:none;"></div>
-    </div>
-
-    <div id="shareModal" class="share-modal">
-        <div class="share-modal-content">
-            <h3 style="margin: 0 0 10px 0;">📸 分享你的学习风格</h3>
-            <p style="color: #666; margin-bottom: 10px;">点击下方按钮分享到社交网站</p>
-            <img id="sharePreviewImage" class="share-image-preview" src="" alt="分享卡片预览">
-            <div class="share-buttons">
-                <a id="shareInstagram" class="share-icon-btn btn-instagram" target="_blank">📸 Instagram</a>
-                <a id="shareTwitter" class="share-icon-btn btn-twitter" target="_blank">🐦 Twitter</a>
-                <a id="shareFacebook" class="share-icon-btn btn-facebook" target="_blank">📘 Facebook</a>
-                <a id="shareWhatsApp" class="share-icon-btn btn-whatsapp" target="_blank">💬 WhatsApp</a>
-            </div>
-            <div class="share-buttons">
-                <button id="downloadImageBtn" class="share-icon-btn btn-download">💾 保存图片</button>
-                <button id="closeShareModal" class="share-icon-btn btn-close">✕ 关闭</button>
-            </div>
-            <div class="share-tip">
-                💡 提示：点击 Instagram 后选择「创建故事」→ 从相册选择图片
-            </div>
-        </div>
     </div>
 
     <footer>🔍 Your data will be saved to Google Sheets. Each row must have unique numbers 1-4.</footer>
