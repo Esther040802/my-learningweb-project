@@ -965,24 +965,6 @@
             alert('您的浏览器不支持原生分享功能，请使用上方的社交平台按钮分享');
         }
     }
-    // 打开分享弹窗
-    function openShareModal(primaryCode) {
-        const imageUrl = getShareCardImage(primaryCode);
-        currentShareImageUrl = imageUrl;
-        
-        // 预览图片
-        const previewImg = document.getElementById('sharePreviewImage');
-        if (previewImg) {
-            previewImg.src = imageUrl;
-        }
-        
-        // 显示弹窗
-        const modal = document.getElementById('shareModal');
-        if (modal) {
-            modal.classList.add('active');
-        }
-    }
-
     // 下载分享图片
     function downloadShareImage() {
         if (!currentShareImageUrl) return;
@@ -1013,62 +995,13 @@
         }
     }
 
-    // 在结果区域添加分享按钮
-    let shareButtonAdded = false;
-
-    function addShareResultButton(primaryCode) {
-        if (document.getElementById('shareResultBtn')) return;
-        if (shareButtonAdded) return;
-        
-        const resultArea = document.getElementById('resultArea');
-        if (!resultArea) return;
-        
-        const shareBtn = document.createElement('button');
-        shareBtn.id = 'shareResultBtn';
-        shareBtn.className = 'share-result-btn';
-        shareBtn.innerHTML = '📸 分享结果到社交网站';
-        shareBtn.onclick = () => openShareModal(primaryCode);
-        
-        resultArea.appendChild(shareBtn);
-        shareButtonAdded = true;
-    }
-
-    // 移除分享按钮
-    function removeShareResultButton() {
-        const btn = document.getElementById('shareResultBtn');
-        if (btn) btn.remove();
-        shareButtonAdded = false;
-    }
-
-    // 初始化分享弹窗事件监听
-    function initShareModalEvents() {
-        const downloadBtn = document.getElementById('downloadImageBtn');
-        if (downloadBtn) {
-            downloadBtn.addEventListener('click', downloadShareImage);
-        }
-        
-        const closeBtn = document.getElementById('closeShareModal');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', closeShareModal);
-        }
-        
-        const modal = document.getElementById('shareModal');
-        if (modal) {
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) closeShareModal();
-            });
-        }
-    }
-
+  
     window.addEventListener('DOMContentLoaded', () => {
         buildTable();
         initDB().catch(e=>console.warn);
         document.getElementById('calcBtn').addEventListener('click', calculateAndShow);
         document.getElementById('resetFormBtn').addEventListener('click', resetAll);
         document.getElementById('fullName').focus();
-
-        // 新增：初始化分享弹窗事件
-        initShareModalEvents();
     });
 </script>
 </body>
