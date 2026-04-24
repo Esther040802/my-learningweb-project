@@ -1090,20 +1090,22 @@ function downloadShareImage() {
 
         // ========== 详细报告申请功能 ==========
     // PDF 报告映射规则：
-// - RO 和 AC 同时出现在前两名（无论顺序）→ 下载 report_RO_AC.pdf
-// - 其他组合 → 下载 report_default.pdf
-    function getReportFile(primaryCode, secondaryCode) {
-        // 检查是否同时包含 RO 和 AC（顺序不限）
-        const hasRO = (primaryCode === 'RO' || secondaryCode === 'RO');
-        const hasAC = (primaryCode === 'AC' || secondaryCode === 'AC');
-        
-        if (hasRO && hasAC) {
-            return 'pdfs/report_RO_AC.pdf';
-        }
-        
-        // 其他组合的默认报告
-        return 'pdfs/report_default.pdf';
-    }
+function getReportFile(primaryCode, secondaryCode) {
+    // 将两个风格代码排序，生成统一的 key（不区分顺序）
+    const sorted = [primaryCode, secondaryCode].sort().join('_');
+    
+    // 6 种组合对应的 PDF 文件
+    const reportMap = {
+        'CE_RO': 'pdfs/report_CE_RO.pdf',
+        'CE_AC': 'pdfs/report_CE_AC.pdf',
+        'CE_AE': 'pdfs/report_CE_AE.pdf',
+        'RO_AC': 'pdfs/report_RO_AC.pdf',
+        'RO_AE': 'pdfs/report_RO_AE.pdf',
+        'AC_AE': 'pdfs/report_AC_AE.pdf',
+    };
+    
+    return reportMap[sorted] || 'pdfs/report_default.pdf';
+}
     
     // 验证报告申请表单
     function validateReportForm() {
