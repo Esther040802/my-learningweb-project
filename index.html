@@ -1123,33 +1123,28 @@ function getReportFile(primaryCode, secondaryCode) {
     }
     
     // 保存报告申请信息到 Google Sheets（可选）
-    // 保存报告申请信息到 Google Sheets（只更新报告区字段）
-    async function saveReportRequestInfo(name, phone, school, studentId, grade, major, primaryCode, secondaryCode, reportType) {
-        if (!GOOGLE_SCRIPT_URL) return;
-        
-        const sheetData = {
-            name: name,
-            phone: phone,
-            school: school,
-            studentId: studentId,
-            grade: grade,
-            major: major,
-            reportType: reportType,
-            reportRequestTime: new Date().toISOString()
-        };
-        
-        try {
-            await fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(sheetData)
-            });
-            console.log('报告申请信息已更新');
-        } catch(e) {
-            console.log('保存报告申请信息失败', e);
-        }
-    }
+// 保存申请信息到 Google Sheets
+await saveReportRequestInfo(name, phone, school, studentId, grade, major, primary.code, secondary.code, reportType);
+
+// 创建下载链接
+const link = document.createElement('a');
+link.href = pdfPath;
+const downloadName = [primary.code, secondary.code].sort().join('_');
+link.download = `learning_report_${downloadName}.pdf`;
+
+// 判断是否为移动设备
+const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+if (isMobile) {
+    // 手机端：在新窗口打开并引导保存
+    window.open(pdfPath, '_blank');
+    alert('📄 PDF 已在新窗口打开\n\n请点击右上角的「分享」或「...」按钮，选择「保存到文件」或「下载」');
+} else {
+    // 电脑端：直接下载
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
     
     // 显示报告申请区并设置下载
 function showReportSection(primary, secondary) {
