@@ -520,10 +520,10 @@
                     <label>📚 Grade / Year *</label>
                     <select id="grade">
                         <option value="">Select grade</option>
-                        <option value="Freshman">Freshman</option>
-                        <option value="Sophomore">Sophomore</option>
-                        <option value="Junior">Junior</option>
-                        <option value="Senior">Senior</option>
+                        <option value="Y1">Y1</option>
+                        <option value="Y2">Y2</option>
+                        <option value="Y3">Y3</option>
+                        <option value="Y4">Y4</option>
                         <option value="Postgraduate">Postgraduate</option>
                         <option value="PhD">PhD</option>
                         <option value="Other">Other</option>
@@ -1236,6 +1236,11 @@ function getReportFile(primaryCode, secondaryCode) {
                 }, 4000);
             }
         });
+        const cardContainer = document.getElementById('resultCardContainer');
+        if (cardContainer && reportSection) {
+            // 将报告区移动到图卡容器之后
+            cardContainer.insertAdjacentElement('afterend', reportSection);
+    }
     }
 
     window.addEventListener('DOMContentLoaded', () => {
