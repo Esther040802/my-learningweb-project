@@ -765,76 +765,73 @@
     function getShareCardImage(primaryCode) {
         return shareCardImages[primaryCode] || shareCardImages.CE;
     }
-        // 显示图卡和分享按钮
-    function displayShareCard(primaryCode) {
-        const imageUrl = getShareCardImage(primaryCode);
-        const resultArea = document.getElementById('resultArea');
-        
-        // 检查是否已存在图卡容器，避免重复添加
-        let cardContainer = document.getElementById('resultCardContainer');
-        if (cardContainer) {
-            cardContainer.remove();
-        }
-        
-        // 创建图卡容器
-        cardContainer = document.createElement('div');
-        cardContainer.id = 'resultCardContainer';
-        cardContainer.className = 'result-card-container';
-        
-        // 添加图片
-        const img = document.createElement('img');
-        img.src = imageUrl;
-        img.alt = '你的学习风格图卡';
-        img.className = 'result-card-image';
-        cardContainer.appendChild(img);
-        
-        // 添加原生分享按钮（移动端直接调起分享）
-        // 创建按钮容器（让两个按钮并排）
-const buttonContainer = document.createElement('div');
-buttonContainer.style.display = 'flex';
-buttonContainer.style.gap = '12px';
-buttonContainer.style.justifyContent = 'center';
-buttonContainer.style.margin = '10px auto 0';
-buttonContainer.style.maxWidth = '300px';
-
-// 下载按钮
-const downloadBtn = document.createElement('button');
-downloadBtn.className = 'card-share-btn share-native-btn';
-downloadBtn.innerHTML = '💾 保存图片';
-downloadBtn.style.flex = '1';
-downloadBtn.style.background = '#2c7da0';
-downloadBtn.onclick = () => downloadShareImage();
-buttonContainer.appendChild(downloadBtn);
-
-// 原生分享按钮（移动端直接调起分享）
-if (navigator.share) {
-    const nativeShareBtn = document.createElement('button');
-    nativeShareBtn.className = 'card-share-btn share-native-btn';
-    nativeShareBtn.innerHTML = '📤 分享此页面';
-    nativeShareBtn.style.flex = '1';
-    nativeShareBtn.style.background = 'linear-gradient(135deg, #f09433, #d62976, #962fbf)';
-    nativeShareBtn.onclick = () => nativeShare();
-    buttonContainer.appendChild(nativeShareBtn);
-} else {
-    // 如果不支持原生分享，只显示下载按钮（占满宽度）
-    downloadBtn.style.maxWidth = '100%';
-    downloadBtn.style.width = '100%';
-    buttonContainer.appendChild(downloadBtn);
-}
-
-cardContainer.appendChild(buttonContainer);
-        
-        // 添加提示文字
-        const hint = document.createElement('div');
-        hint.className = 'hint-text';
-        hint.innerHTML = '💡 点击上方按钮可直接分享到社交平台';
-        cardContainer.appendChild(hint);
-        
-        resultArea.appendChild(cardContainer);
-        
-        // 绑定分享按钮事件
-        attachShareEvents(imageUrl);
+// 显示图卡和分享按钮
+function displayShareCard(primaryCode) {
+    const imageUrl = getShareCardImage(primaryCode);
+    currentShareImageUrl = imageUrl;  // ← 关键：设置全局变量
+    
+    const resultArea = document.getElementById('resultArea');
+    
+    // 检查是否已存在图卡容器，避免重复添加
+    let cardContainer = document.getElementById('resultCardContainer');
+    if (cardContainer) {
+        cardContainer.remove();
     }
+    
+    // 创建图卡容器
+    cardContainer = document.createElement('div');
+    cardContainer.id = 'resultCardContainer';
+    cardContainer.className = 'result-card-container';
+    
+    // 添加图片
+    const img = document.createElement('img');
+    img.src = imageUrl;
+    img.alt = '你的学习风格图卡';
+    img.className = 'result-card-image';
+    cardContainer.appendChild(img);
+    
+    // 创建按钮容器（让两个按钮并排）
+    const buttonContainer = document.createElement('div');
+    buttonContainer.style.display = 'flex';
+    buttonContainer.style.gap = '12px';
+    buttonContainer.style.justifyContent = 'center';
+    buttonContainer.style.margin = '10px auto 0';
+    buttonContainer.style.maxWidth = '300px';
+    
+    // 下载按钮
+    const downloadBtn = document.createElement('button');
+    downloadBtn.className = 'card-share-btn share-native-btn';
+    downloadBtn.innerHTML = '💾 保存图片';
+    downloadBtn.style.flex = '1';
+    downloadBtn.style.background = '#2c7da0';
+    downloadBtn.onclick = () => downloadShareImage();
+    buttonContainer.appendChild(downloadBtn);
+    
+    // 原生分享按钮（移动端直接调起分享）
+    if (navigator.share) {
+        const nativeShareBtn = document.createElement('button');
+        nativeShareBtn.className = 'card-share-btn share-native-btn';
+        nativeShareBtn.innerHTML = '📤 分享此页面';
+        nativeShareBtn.style.flex = '1';
+        nativeShareBtn.style.background = 'linear-gradient(135deg, #f09433, #d62976, #962fbf)';
+        nativeShareBtn.onclick = () => nativeShare();
+        buttonContainer.appendChild(nativeShareBtn);
+    } else {
+        // 如果不支持原生分享，下载按钮占满宽度
+        downloadBtn.style.maxWidth = '100%';
+        downloadBtn.style.width = '100%';
+    }
+    
+    cardContainer.appendChild(buttonContainer);
+    
+    // 添加提示文字
+    const hint = document.createElement('div');
+    hint.className = 'hint-text';
+    hint.innerHTML = '💡 点击「保存图片」可下载到相册，点击「分享此页面」可发送给好友';
+    cardContainer.appendChild(hint);
+    
+    resultArea.appendChild(cardContainer);
+}
 
     // 绑定分享按钮事件
     // 绑定按钮
