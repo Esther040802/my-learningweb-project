@@ -1122,8 +1122,9 @@ function getReportFile(primaryCode, secondaryCode) {
         return true;
     }
     
-        // 保存报告申请信息到 Google Sheets（可选）
-        async function saveReportRequestInfo(name, phone, school, studentId, grade, major, primaryCode, secondaryCode, reportType) {
+    // 保存报告申请信息到 Google Sheets（可选）
+    // 保存报告申请信息到 Google Sheets（只更新报告区字段）
+    async function saveReportRequestInfo(name, phone, school, studentId, grade, major, primaryCode, secondaryCode, reportType) {
         if (!GOOGLE_SCRIPT_URL) return;
         
         const sheetData = {
@@ -1138,16 +1139,15 @@ function getReportFile(primaryCode, secondaryCode) {
         };
         
         try {
-            // 不使用 no-cors 以便接收响应
-            const response = await fetch(GOOGLE_SCRIPT_URL, {
+            await fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
+                mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(sheetData)
             });
-            const result = await response.json();
-            console.log('保存结果:', result);
+            console.log('报告申请信息已更新');
         } catch(e) {
-            console.log('保存失败:', e);
+            console.log('保存报告申请信息失败', e);
         }
     }
     
@@ -1196,8 +1196,7 @@ function getReportFile(primaryCode, secondaryCode) {
             // 创建下载链接
             const link = document.createElement('a');
             link.href = pdfPath;
-            const sortedCodes = [primary.code, secondary.code].sort().join('_');
-            link.download = `report_${sortedCodes}.pdf`;
+            link.download = `learning_report_${studentId}.pdf`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
