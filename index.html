@@ -853,11 +853,13 @@
             saveStatusDiv.innerHTML = "⚠️ Data saved locally only. Please check your connection.";
             saveStatusDiv.style.background = "#ffe6e5";
         }
+        console.log('1');
         displayShareCard(primary.code);
-        // 添加分享按钮（传入主导风格的code）
+        console.log('2');
         addShareResultButton(primary.code);
-                // 显示详细报告申请区
+        console.log('3');
         showReportSection(primary, secondary);
+        console.log('4');
     }
 
     function resetAll() {
