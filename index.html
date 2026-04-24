@@ -1152,76 +1152,82 @@ function getReportFile(primaryCode, secondaryCode) {
     }
     
     // 显示报告申请区并设置下载
-    function showReportSection(primary, secondary) {
-        const reportSection = document.getElementById('reportRequestSection');
-        if (!reportSection) return;
+function showReportSection(primary, secondary) {
+    const reportSection = document.getElementById('reportRequestSection');
+    if (!reportSection) return;
+    
+    reportSection.style.display = 'block';
+    
+    // 预先填充一些信息（从之前填写的个人信息中获取）
+    const name = document.getElementById('fullName').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const email = document.getElementById('email').value.trim();
+    
+    const downloadBtn = document.getElementById('downloadReportBtn');
+    // 移除旧的事件监听，避免重复绑定
+    const newBtn = downloadBtn.cloneNode(true);
+    downloadBtn.parentNode.replaceChild(newBtn, downloadBtn);
+    
+    newBtn.addEventListener('click', async () => {
+        if (!validateReportForm()) return;
         
-        reportSection.style.display = 'block';
+        const school = document.getElementById('schoolName').value.trim();
+        const studentId = document.getElementById('studentId').value.trim();
+        const grade = document.getElementById('grade').value;
+        const major = document.getElementById('major').value.trim();
         
-        // 预先填充一些信息（从之前填写的个人信息中获取）
-        const name = document.getElementById('fullName').value.trim();
-        const phone = document.getElementById('phone').value.trim();
-        const email = document.getElementById('email').value.trim();
+        // 获取对应的 PDF 文件路径
+        const pdfPath = getReportFile(primary.code, secondary.code);
         
-        const downloadBtn = document.getElementById('downloadReportBtn');
-        // 移除旧的事件监听，避免重复绑定
-        const newBtn = downloadBtn.cloneNode(true);
-        downloadBtn.parentNode.replaceChild(newBtn, downloadBtn);
+        // ========== 修改1：根据诊断类型确定报告类型 ==========
+        const sortedCodes = [primary.code, secondary.code].sort().join('_');
+        const reportTypeMap = {
+            'CE_RO': 'CE_RO_Report',
+            'CE_AC': 'CE_AC_Report',
+            'CE_AE': 'CE_AE_Report',
+            'RO_AC': 'RO_AC_Report',
+            'RO_AE': 'RO_AE_Report',
+            'AC_AE': 'AC_AE_Report',
+        };
+        const reportType = reportTypeMap[sortedCodes] || 'Default_Report';
         
-        newBtn.addEventListener('click', async () => {
-            if (!validateReportForm()) return;
-            
-            const school = document.getElementById('schoolName').value.trim();
-            const studentId = document.getElementById('studentId').value.trim();
-            const grade = document.getElementById('grade').value;
-            const major = document.getElementById('major').value.trim();
-            
-            // 获取对应的 PDF 文件路径
-            const pdfPath = getReportFile(primary.code, secondary.code);
-            
-            // 确定报告类型
-            let reportType = 'Default';
-            const hasRO = (primary.code === 'RO' || secondary.code === 'RO');
-            const hasAC = (primary.code === 'AC' || secondary.code === 'AC');
-            if (hasRO && hasAC) {
-                reportType = 'RO_AC_Report';
-            }
-            
-            // 显示加载状态
-            newBtn.innerHTML = '⏳ Preparing download...';
-            newBtn.disabled = true;
-            
-            // 保存申请信息到 Google Sheets
-            await saveReportRequestInfo(name, phone, school, studentId, grade, major, primary.code, secondary.code, reportType);
-            // 创建下载链接
-            const link = document.createElement('a');
-            link.href = pdfPath;
-            link.download = `learning_report_${studentId}.pdf`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            // 恢复按钮状态
-            newBtn.innerHTML = '📥 Download Detailed Report (PDF)';
-            newBtn.disabled = false;
-            
-            // 显示成功提示
-            const statusDiv = document.getElementById('saveStatus');
-            if (statusDiv) {
-                statusDiv.style.display = 'block';
-                statusDiv.innerHTML = '✅ Report download started! Please check your downloads folder.';
-                statusDiv.style.background = "#e0f2e9";
-                setTimeout(() => {
-                    statusDiv.style.display = 'none';
-                }, 4000);
-            }
-        });
-        const cardContainer = document.getElementById('resultCardContainer');
-        if (cardContainer && reportSection) {
-            // 将报告区移动到图卡容器之后
-            cardContainer.insertAdjacentElement('afterend', reportSection);
+        // 显示加载状态
+        newBtn.innerHTML = '⏳ Preparing download...';
+        newBtn.disabled = true;
+        
+        // 保存申请信息到 Google Sheets
+        await saveReportRequestInfo(name, phone, school, studentId, grade, major, primary.code, secondary.code, reportType);
+        
+        // ========== 修改2：创建下载链接（使用诊断类型命名）==========
+        const link = document.createElement('a');
+        link.href = pdfPath;
+        const downloadName = [primary.code, secondary.code].sort().join('_');
+        link.download = `learning_report_${downloadName}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // 恢复按钮状态
+        newBtn.innerHTML = '📥 Download Detailed Report (PDF)';
+        newBtn.disabled = false;
+        
+        // 显示成功提示
+        const statusDiv = document.getElementById('saveStatus');
+        if (statusDiv) {
+            statusDiv.style.display = 'block';
+            statusDiv.innerHTML = '✅ Report download started! Please check your downloads folder.';
+            statusDiv.style.background = "#e0f2e9";
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 4000);
+        }
+    });
+    const cardContainer = document.getElementById('resultCardContainer');
+    if (cardContainer && reportSection) {
+        // 将报告区移动到图卡容器之后
+        cardContainer.insertAdjacentElement('afterend', reportSection);
     }
-    }
+}
 
     window.addEventListener('DOMContentLoaded', () => {
         buildTable();
