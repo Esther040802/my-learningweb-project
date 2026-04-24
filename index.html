@@ -1122,9 +1122,8 @@ function getReportFile(primaryCode, secondaryCode) {
         return true;
     }
     
-    // 保存报告申请信息到 Google Sheets（可选）
-    // 保存报告申请信息到 Google Sheets（只更新报告区字段）
-    async function saveReportRequestInfo(name, phone, school, studentId, grade, major, primaryCode, secondaryCode, reportType) {
+        // 保存报告申请信息到 Google Sheets（可选）
+        async function saveReportRequestInfo(name, phone, school, studentId, grade, major, primaryCode, secondaryCode, reportType) {
         if (!GOOGLE_SCRIPT_URL) return;
         
         const sheetData = {
@@ -1139,15 +1138,16 @@ function getReportFile(primaryCode, secondaryCode) {
         };
         
         try {
-            await fetch(GOOGLE_SCRIPT_URL, {
+            // 不使用 no-cors 以便接收响应
+            const response = await fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
-                mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(sheetData)
             });
-            console.log('报告申请信息已更新');
+            const result = await response.json();
+            console.log('保存结果:', result);
         } catch(e) {
-            console.log('保存报告申请信息失败', e);
+            console.log('保存失败:', e);
         }
     }
     
