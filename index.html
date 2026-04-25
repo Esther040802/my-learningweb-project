@@ -858,13 +858,19 @@
         console.log('1');
         displayShareCard(primary.code);
         // 显示下载报告按钮
+        // 显示下载报告按钮
         const downloadBtn = document.getElementById('downloadReportBtn');
         if (downloadBtn) {
+            console.log('找到下载按钮，准备绑定事件');
             downloadBtn.style.display = 'block';
-            // 移除旧事件，避免重复绑定
             const newDownloadBtn = downloadBtn.cloneNode(true);
             downloadBtn.parentNode.replaceChild(newDownloadBtn, downloadBtn);
-            newDownloadBtn.onclick = () => downloadReport(primary.code, secondary.code);
+            newDownloadBtn.onclick = () => {
+                console.log('按钮被点击了！风格:', primary.code, secondary.code);
+                downloadReport(primary.code, secondary.code);
+            };
+        } else {
+            console.log('找不到下载按钮！');
         }
     }
 
