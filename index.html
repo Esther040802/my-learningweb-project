@@ -424,6 +424,31 @@
             <label>📧 Email (optional)</label>
             <input type="email" id="email" placeholder="name@example.com">
         </div>
+        <div class="field-group">
+            <label>🏫 School Name *</label>
+            <input type="text" id="schoolName" placeholder="Enter your school name">
+        </div>
+        <div class="field-group">
+            <label>🆔 Student ID *</label>
+            <input type="text" id="studentId" placeholder="Enter your student ID">
+        </div>
+        <div class="field-group">
+            <label>📚 Grade / Year *</label>
+            <select id="grade">
+                <option value="">Select grade</option>
+                <option value="Y1">Y1</option>
+                <option value="Y2">Y2</option>
+                <option value="Y3">Y3</option>
+                <option value="Y4">Y4</option>
+                <option value="Postgraduate">Postgraduate</option>
+                <option value="PhD">PhD</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+        <div class="field-group">
+            <label>📖 Major / Department *</label>
+            <input type="text" id="major" placeholder="Enter your major or department">
+        </div>
     </div>
 
     <!-- 工作坊邀请和时间选择（移到个人信息下方，必须填写才能计算） -->
@@ -499,43 +524,6 @@
         <div id="styleMessage" class="learning-style" style="background:#2c7da0;">✨ Complete the test and click calculate ✨</div>
         <div id="insightPanel" class="insight-box" style="display:none;"></div>
         <div id="saveStatus" class="status-msg" style="display:none;"></div>
-                <!-- Detailed Report Request Section -->
-        <div id="reportRequestSection" class="report-request-section" style="display: none;">
-            <div class="report-title">
-                📄 Detailed Learning Style Report
-            </div>
-            <div class="report-desc">
-                Fill in the information below to download your personalized detailed analysis report (PDF format)
-            </div>
-            <div class="report-form-row">
-                <div class="report-form-group">
-                    <label>🏫 School Name *</label>
-                    <input type="text" id="schoolName" placeholder="Enter your school name">
-                </div>
-                <div class="report-form-group">
-                    <label>🆔 Student ID / Staff ID *</label>
-                    <input type="text" id="studentId" placeholder="Enter your student/staff ID">
-                </div>
-            </div>
-            <div class="report-form-row">
-                <div class="report-form-group">
-                    <label>📚 Grade / Year *</label>
-                    <select id="grade">
-                        <option value="">Select grade</option>
-                        <option value="Y1">Y1</option>
-                        <option value="Y2">Y2</option>
-                        <option value="Y3">Y3</option>
-                        <option value="Y4">Y4</option>
-                        <option value="Postgraduate">Postgraduate</option>
-                        <option value="PhD">PhD</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-                <div class="report-form-group">
-                    <label>📖 Major / Department *</label>
-                    <input type="text" id="major" placeholder="Enter your major or department">
-                </div>
-            </div>
             <button id="downloadReportBtn" class="download-report-btn">📥 Download Detailed Report (PDF)</button>
             <div class="report-hint">🔒 Information is used for statistical analysis only and will not be shared</div>
         </div>
@@ -791,22 +779,37 @@
         });
     }
 
-    async function saveToCloud(name, phone, email, freeTime, scores, primaryStyleName, secondaryStyleName) {
-        const sheetData = {
-            name: name, phone: phone, email: email, freeTime: freeTime,
-            scores: { ce: scores.ce, ro: scores.ro, ac: scores.ac, ae: scores.ae },
-            primaryStyle: primaryStyleName, secondaryStyle: secondaryStyleName,
-            workshopInterest: "Yes - Registered"
-        };
-        return await sendToGoogleSheets(sheetData);
-    }
+    async function saveToCloud(name, phone, email, freeTime, scores, primaryStyleName, secondaryStyleName, school, studentId, grade, major) {
+    const sheetData = {
+        name: name, phone: phone, email: email, freeTime: freeTime,
+        scores: { ce: scores.ce, ro: scores.ro, ac: scores.ac, ae: scores.ae },
+        primaryStyle: primaryStyleName, secondaryStyle: secondaryStyleName,
+        workshopInterest: "Yes - Registered",
+        school: school,
+        studentId: studentId,
+        grade: grade,
+        major: major,
+        reportType: "Not requested yet"
+    };
+    return await sendToGoogleSheets(sheetData);
+}
 
     // 主要计算函数
     async function calculateAndShow() {
         const name = document.getElementById('fullName').value.trim();
         const phone = document.getElementById('phone').value.trim();
         const freeTime = document.getElementById('freeTimeSelect').value;
+                // 获取新字段的值
+        const school = document.getElementById('schoolName').value.trim();
+        const studentId = document.getElementById('studentId').value.trim();
+        const grade = document.getElementById('grade').value;
+        const major = document.getElementById('major').value.trim();
         
+        // 添加验证
+        if (!school) { alert("Please enter your school name."); return; }
+        if (!studentId) { alert("Please enter your student ID."); return; }
+        if (!grade) { alert("Please select your grade."); return; }
+        if (!major) { alert("Please enter your major/department."); return; }
         // 验证必填项
         if (!name) { alert("Please enter your name."); return; }
         if (!phone) { alert("Phone number is required."); return; }
@@ -840,7 +843,7 @@
         try {
             const primaryStyleName = `${primary.fullData.fullName} (${primary.code})`;
             const secondaryStyleName = `${secondary.fullData.fullName} (${secondary.code})`;
-            const cloudSaved = await saveToCloud(name, phone, emailVal, freeTime, scores, primaryStyleName, secondaryStyleName);
+            const cloudSaved = await saveToCloud(name, phone, emailVal, freeTime, scores, primaryStyleName, secondaryStyleName, school, studentId, grade, major);
             
             if (cloudSaved) {
                 saveStatusDiv.innerHTML = "✅ Your test results and workshop registration have been saved to Google Sheets! Thank you.";
@@ -855,9 +858,15 @@
         }
         console.log('1');
         displayShareCard(primary.code);
-        console.log('3');
-        showReportSection(primary, secondary);
-        console.log('4');
+        // 显示下载报告按钮
+        const downloadBtn = document.getElementById('downloadReportBtn');
+        if (downloadBtn) {
+            downloadBtn.style.display = 'block';
+            // 移除旧事件，避免重复绑定
+            const newDownloadBtn = downloadBtn.cloneNode(true);
+            downloadBtn.parentNode.replaceChild(newDownloadBtn, downloadBtn);
+            newDownloadBtn.onclick = () => downloadReport(primary.code, secondary.code);
+        }
     }
 
     function resetAll() {
@@ -870,6 +879,10 @@
         document.getElementById('phone').value = '';
         document.getElementById('email').value = '';
         document.getElementById('freeTimeSelect').value = '';
+        document.getElementById('schoolName').value = '';
+        document.getElementById('studentId').value = '';
+        document.getElementById('grade').value = '';
+        document.getElementById('major').value = '';
         document.getElementById('ceScore').innerText = '-';
         document.getElementById('roScore').innerText = '-';
         document.getElementById('acScore').innerText = '-';
@@ -878,6 +891,10 @@
         document.getElementById('insightPanel').style.display = 'none';
         document.getElementById('saveStatus').style.display = 'none';
         document.getElementById('fullName').focus();
+
+        const downloadBtn = document.getElementById('downloadReportBtn');
+        if (downloadBtn) downloadBtn.style.display = 'none';
+        
         const cardContainer = document.getElementById('resultCardContainer');
         if (cardContainer) cardContainer.remove();
         removeShareResultButton();
@@ -1076,7 +1093,25 @@ function downloadShareImage() {
             modal.classList.remove('active');
         }
     }
-
+// 下载报告函数（不保存数据，只下载）
+    function downloadReport(primaryCode, secondaryCode) {
+        const pdfPath = getReportFile(primaryCode, secondaryCode);
+        const downloadName = [primaryCode, secondaryCode].sort().join('_');
+        
+        const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+        
+        if (isMobile) {
+            window.open(pdfPath, '_blank');
+            alert('📄 PDF 已在新窗口打开\n\n请点击右上角的「分享」或「...」按钮，选择「保存到文件」或「下载」');
+        } else {
+            const link = document.createElement('a');
+            link.href = pdfPath;
+            link.download = `learning_report_${downloadName}.pdf`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    }
         // ========== 详细报告申请功能 ==========
     // PDF 报告映射规则：
 function getReportFile(primaryCode, secondaryCode) {
@@ -1096,36 +1131,6 @@ function getReportFile(primaryCode, secondaryCode) {
     return reportMap[sorted] || 'pdfs/report_default.pdf';
 }
     
-    // 验证报告申请表单
-    function validateReportForm() {
-        const school = document.getElementById('schoolName').value.trim();
-        const studentId = document.getElementById('studentId').value.trim();
-        const grade = document.getElementById('grade').value;
-        const major = document.getElementById('major').value.trim();
-        
-        if (!school) {
-            alert('请填写学校名称');
-            return false;
-        }
-        if (!studentId) {
-            alert('请填写学号/工号');
-            return false;
-        }
-        if (!grade) {
-            alert('请选择年级');
-            return false;
-        }
-        if (!major) {
-            alert('请填写科系/专业');
-            return false;
-        }
-        return true;
-    }
-    
-    // 保存报告申请信息到 Google Sheets（可选）
-// 保存申请信息到 Google Sheets
-await saveReportRequestInfo(name, phone, school, studentId, grade, major, primary.code, secondary.code, reportType);
-
 // 创建下载链接
 const link = document.createElement('a');
 link.href = pdfPath;
@@ -1144,84 +1149,6 @@ if (isMobile) {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-}
-    
-    // 显示报告申请区并设置下载
-function showReportSection(primary, secondary) {
-    const reportSection = document.getElementById('reportRequestSection');
-    if (!reportSection) return;
-    
-    reportSection.style.display = 'block';
-    
-    // 预先填充一些信息（从之前填写的个人信息中获取）
-    const name = document.getElementById('fullName').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    const email = document.getElementById('email').value.trim();
-    
-    const downloadBtn = document.getElementById('downloadReportBtn');
-    // 移除旧的事件监听，避免重复绑定
-    const newBtn = downloadBtn.cloneNode(true);
-    downloadBtn.parentNode.replaceChild(newBtn, downloadBtn);
-    
-    newBtn.addEventListener('click', async () => {
-        if (!validateReportForm()) return;
-        
-        const school = document.getElementById('schoolName').value.trim();
-        const studentId = document.getElementById('studentId').value.trim();
-        const grade = document.getElementById('grade').value;
-        const major = document.getElementById('major').value.trim();
-        
-        // 获取对应的 PDF 文件路径
-        const pdfPath = getReportFile(primary.code, secondary.code);
-        
-        // ========== 修改1：根据诊断类型确定报告类型 ==========
-        const sortedCodes = [primary.code, secondary.code].sort().join('_');
-        const reportTypeMap = {
-            'CE_RO': 'CE_RO_Report',
-            'CE_AC': 'CE_AC_Report',
-            'CE_AE': 'CE_AE_Report',
-            'RO_AC': 'RO_AC_Report',
-            'RO_AE': 'RO_AE_Report',
-            'AC_AE': 'AC_AE_Report',
-        };
-        const reportType = reportTypeMap[sortedCodes] || 'Default_Report';
-        
-        // 显示加载状态
-        newBtn.innerHTML = '⏳ Preparing download...';
-        newBtn.disabled = true;
-        
-        // 保存申请信息到 Google Sheets
-        await saveReportRequestInfo(name, phone, school, studentId, grade, major, primary.code, secondary.code, reportType);
-        
-        // ========== 修改2：创建下载链接（使用诊断类型命名）==========
-        const link = document.createElement('a');
-        link.href = pdfPath;
-        const downloadName = [primary.code, secondary.code].sort().join('_');
-        link.download = `learning_report_${downloadName}.pdf`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        
-        // 恢复按钮状态
-        newBtn.innerHTML = '📥 Download Detailed Report (PDF)';
-        newBtn.disabled = false;
-        
-        // 显示成功提示
-        const statusDiv = document.getElementById('saveStatus');
-        if (statusDiv) {
-            statusDiv.style.display = 'block';
-            statusDiv.innerHTML = '✅ Report download started! Please check your downloads folder.';
-            statusDiv.style.background = "#e0f2e9";
-            setTimeout(() => {
-                statusDiv.style.display = 'none';
-            }, 4000);
-        }
-    });
-    const cardContainer = document.getElementById('resultCardContainer');
-    if (cardContainer && reportSection) {
-        // 将报告区移动到图卡容器之后
-        cardContainer.insertAdjacentElement('afterend', reportSection);
-    }
 }
 
     window.addEventListener('DOMContentLoaded', () => {
