@@ -1130,26 +1130,6 @@ function getReportFile(primaryCode, secondaryCode) {
     
     return reportMap[sorted] || 'pdfs/report_default.pdf';
 }
-    
-// 创建下载链接
-const link = document.createElement('a');
-link.href = pdfPath;
-const downloadName = [primary.code, secondary.code].sort().join('_');
-link.download = `learning_report_${downloadName}.pdf`;
-
-// 判断是否为移动设备
-const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-if (isMobile) {
-    // 手机端：在新窗口打开并引导保存
-    window.open(pdfPath, '_blank');
-    alert('📄 PDF 已在新窗口打开\n\n请点击右上角的「分享」或「...」按钮，选择「保存到文件」或「下载」');
-} else {
-    // 电脑端：直接下载
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-}
 
     window.addEventListener('DOMContentLoaded', () => {
         buildTable();
