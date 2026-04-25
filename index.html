@@ -1099,25 +1099,26 @@ function downloadShareImage() {
         }
     }
 // 下载报告函数（不保存数据，只下载）
-    function downloadReport(primaryCode, secondaryCode) {
-        const pdfPath = getReportFile(primaryCode, secondaryCode);
-        console.log('实际请求的路径:', pdfPath);  
-        const downloadName = [primaryCode, secondaryCode].sort().join('_');
-        
-        const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-        
-        if (isMobile) {
-            window.open(pdfPath, '_blank');
-            alert('📄 PDF 已在新窗口打开\n\n请点击右上角的「分享」或「...」按钮，选择「保存到文件」或「下载」');
-        } else {
-            const link = document.createElement('a');
-            link.href = pdfPath;
-            link.download = `learning_report_${downloadName}.pdf`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
+function downloadReport(primaryCode, secondaryCode) {
+    const pdfPath = getReportFile(primaryCode, secondaryCode);
+    console.log('实际请求的路径:', pdfPath);  
+    const downloadName = [primaryCode, secondaryCode].sort().join('_');
+    
+    const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    
+    if (isMobile) {
+        // 手机端：直接在新窗口打开，不弹确认框
+        window.open(pdfPath, '_blank');
+    } else {
+        // 电脑端：直接下载
+        const link = document.createElement('a');
+        link.href = pdfPath;
+        link.download = `learning_report_${downloadName}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
+}
         // ========== 详细报告申请功能 ==========
     // PDF 报告映射规则：
 function getReportFile(primaryCode, secondaryCode) {
