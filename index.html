@@ -533,7 +533,7 @@
 
 <script>
     // ==================== Google Sheets 配置 ====================
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxLpfwIIaeKtD-ZkHfn4Xx7BQy4q9wVjVLBpryFexrEnPBzNVuB5TIWFGlm8dDJS-qWZQ/exec';
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx9wpGbXA47GTE646PNM8SVAl8WgHV5g46VrHyaBUiSIWNrqRZtdYGUKg57AkRaAt2fYg/exec';
     // ============================================================
 
     // 9 ROWS DATA
@@ -743,8 +743,7 @@
     }
 
     // 发送到 Google Sheets
-    // 发送到 Google Sheets
-async function sendToGoogleSheets(data) {
+    async function sendToGoogleSheets(data) {
         if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
             console.warn('Google Sheets URL not configured');
             return false;
@@ -761,7 +760,23 @@ async function sendToGoogleSheets(data) {
             console.error('Error:', error);
             return false;
         }
-}
+    }
+
+    // IndexedDB
+    let db = null;
+    function initDB() {
+        return new Promise((resolve, reject) => {
+            const req = indexedDB.open("KolbWorkshopDB", 2);
+            req.onerror = () => reject("DB error");
+            req.onsuccess = (e) => { db = e.target.result; resolve(db); };
+            req.onupgradeneeded = (e) => {
+                const dbRef = e.target.result;
+                if (!dbRef.objectStoreNames.contains("workshopRegistrations")) {
+                    dbRef.createObjectStore("workshopRegistrations", { keyPath: "id", autoIncrement: true });
+                }
+            };
+        });
+    }
 
     async function saveToCloud(name, phone, email, freeTime, scores, primaryStyleName, secondaryStyleName, school, studentId, grade, major) {
     const sheetData = {
