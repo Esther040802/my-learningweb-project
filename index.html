@@ -1095,6 +1095,7 @@ function downloadShareImage() {
 // 下载报告函数（不保存数据，只下载）
     function downloadReport(primaryCode, secondaryCode) {
         const pdfPath = getReportFile(primaryCode, secondaryCode);
+        console.log('实际请求的路径:', pdfPath);  
         const downloadName = [primaryCode, secondaryCode].sort().join('_');
         
         const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -1126,7 +1127,6 @@ function getReportFile(primaryCode, secondaryCode) {
         'RO_AE': 'pdfs/report_RO_AE.pdf',
         'AC_AE': 'pdfs/report_AC_AE.pdf',
     };
-    
     return reportMap[sorted] || 'pdfs/report_default.pdf';
 }
 
