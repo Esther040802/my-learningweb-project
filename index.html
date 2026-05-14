@@ -452,6 +452,7 @@
     </div>
 
     <!-- 工作坊邀请和时间选择（移到个人信息下方，必须填写才能计算） -->
+    <!--
     <div class="workshop-panel">
         <h3>📢 Workshop on "Practical Learning Techniques"</h3>
         <p>Based on your learning style results, we will design hands-on sessions: real-world case studies, reflective discussions, or experimental labs. Please select your preferred time slot below to continue.</p>
@@ -494,6 +495,7 @@
             </select>
         </div>
     </div>
+    -->
 
     <div class="instruction-note">
         ✏️ <strong>Scoring Rules:</strong> In each row, assign <strong>4, 3, 2, 1</strong> to the four options — each number exactly once.<br>
@@ -778,9 +780,9 @@
         });
     }
 
-    async function saveToCloud(name, phone, email, freeTime, scores, primaryStyleName, secondaryStyleName, school, studentId, grade, major) {
+    async function saveToCloud(name, phone, email, scores, primaryStyleName, secondaryStyleName, school, studentId, grade, major) {
     const sheetData = {
-        name: name, phone: phone, email: email, freeTime: freeTime,
+        name: name, phone: phone, email: email, 
         scores: { ce: scores.ce, ro: scores.ro, ac: scores.ac, ae: scores.ae },
         primaryStyle: primaryStyleName, secondaryStyle: secondaryStyleName,
         workshopInterest: "Yes - Registered",
@@ -797,7 +799,7 @@
     async function calculateAndShow() {
         const name = document.getElementById('fullName').value.trim();
         const phone = document.getElementById('phone').value.trim();
-        const freeTime = document.getElementById('freeTimeSelect').value;
+        //const freeTime = document.getElementById('freeTimeSelect').value;
                 // 获取新字段的值
         const school = document.getElementById('schoolName').value.trim();
         const studentId = document.getElementById('studentId').value.trim();
@@ -812,7 +814,7 @@
         // 验证必填项
         if (!name) { alert("Please enter your name."); return; }
         if (!phone) { alert("Phone number is required."); return; }
-        if (!freeTime || freeTime === "") { alert("Please select your preferred time slot for the workshop."); return; }
+        //if (!freeTime || freeTime === "") { alert("Please select your preferred time slot for the workshop."); return; }
         if (!allRowsValid()) {
             alert("Please complete all rows: each row must have exactly one 4, one 3, one 2, and one 1. No empty or duplicate selections.");
             return;
@@ -842,7 +844,7 @@
         try {
             const primaryStyleName = `${primary.fullData.fullName} (${primary.code})`;
             const secondaryStyleName = `${secondary.fullData.fullName} (${secondary.code})`;
-            const cloudSaved = await saveToCloud(name, phone, emailVal, freeTime, scores, primaryStyleName, secondaryStyleName, school, studentId, grade, major);
+            const cloudSaved = await saveToCloud(name, phone, emailVal, scores, primaryStyleName, secondaryStyleName, school, studentId, grade, major);
             
             if (cloudSaved) {
                 saveStatusDiv.innerHTML = "✅ Your test results and workshop registration have been saved to Google Sheets! Thank you.";
@@ -883,7 +885,7 @@
         document.getElementById('fullName').value = '';
         document.getElementById('phone').value = '';
         document.getElementById('email').value = '';
-        document.getElementById('freeTimeSelect').value = '';
+        //document.getElementById('freeTimeSelect').value = '';
         document.getElementById('schoolName').value = '';
         document.getElementById('studentId').value = '';
         document.getElementById('grade').value = '';
